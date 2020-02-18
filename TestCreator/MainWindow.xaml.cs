@@ -1,4 +1,6 @@
-﻿using System;
+﻿using IronPython.Hosting;
+using Microsoft.Scripting.Hosting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +24,10 @@ namespace TestCreator
     {
         public MainWindow()
         {
-            InitializeComponent();
+            ScriptEngine engine = Python.CreateEngine();
+            var exePath = AppDomain.CurrentDomain.BaseDirectory;
+            engine.ExecuteFile(exePath + "\\Python\\py.py");
+            Console.Read();
         }
     }
 }
