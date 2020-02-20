@@ -1,6 +1,7 @@
 ﻿using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Newtonsoft.Json;
 
 namespace TestCreator
 {
@@ -25,9 +27,13 @@ namespace TestCreator
         public MainWindow()
         {
             ScriptEngine engine = Python.CreateEngine();
-            var exePath = AppDomain.CurrentDomain.BaseDirectory;
-            engine.ExecuteFile(exePath + "\\Python\\py.py");
-            Console.Read();
+            //var exePath = AppDomain.CurrentDomain.BaseDirectory;
+            //engine.ExecuteFile(exePath + "\\Python\\py.py");
+            //Console.Read();
+            List<Task> lst = new List<Task>();
+            lst.Add(new Task { task = "A = {a}, B = {b} Вычеслите A + B", type = true, vars = new Variable[] { new Variable { Name = "a", Range = "0-10" }, new Variable { Name = "b", lst = "0,-1,5".Split(',') } } });
+            lst.Add(new Task { Tasks = new List<string>(new string[] { "A = 1, B = 0 Вычеслите A*B", "A = 0, B = 5 Вычеслите A*B" }), Answ = new List<string>(new string[] { "0", "0" }) });
+            File.WriteAllText("F:\\txt.json" ,JsonConvert.SerializeObject(lst, Formatting.Indented));
         }
     }
 }
