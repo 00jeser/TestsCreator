@@ -26,20 +26,28 @@ namespace TestCreator
     public partial class MainWindow : Window
     {
         List<Task> lst = JsonConvert.DeserializeObject<List<Task>>(File.ReadAllText("F:\\txt.json"));
+
+        Task draggingO;
+        int draggingN;
+
         public MainWindow()
         {
             InitializeComponent();
-            ScriptEngine engine = Python.CreateEngine();
-            //var exePath = AppDomain.CurrentDomain.BaseDirectory;
-            //engine.ExecuteFile(exePath + "\\Python\\py.py");
-            //Console.Read();
 
-            //List<Task> lst = new List<Task>();
-            //lst.Add(new Task { task = "A = {a}, B = {b} Вычеслите A + B", type = true, vars = new Variable[] { new Variable { Name = "a", Range = "0-10" }, new Variable { Name = "b", lst = "0,-1,5".Split(',') } }, math = "Ответ = a + b" });
-            //lst.Add(new Task { Tasks = new List<string>(new string[] { "A = 1, B = 0 Вычеслите A*B", "A = 0, B = 5 Вычеслите A*B" }), Answ = new List<string>(new string[] { "0", "0" }) });
-            //File.WriteAllText("F:\\txt.json" ,JsonConvert.SerializeObject(lst, Formatting.Indented));
             tasksList.ItemsSource = lst;
-
+            try
+            {
+                string colorizationValue = string.Format("{0:x}", Microsoft.Win32.Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM", "ColorizationColor", "00000000"));
+                Color color = (Color)ColorConverter.ConvertFromString("#" + colorizationValue);
+                this.Resources["systemColor"] = new SolidColorBrush(color);
+                float r = color.R, g = color.G, b = color.B, h = 0, s = 0, v = 0;
+                Singlton.RGBtoHSV(r, g, b, out h, out s, out v);
+                s /= 2;
+                Singlton.HSVtoRGB(h, s, v, out r, out g, out b);
+                color.R = (byte)r; color.G = (byte)g; color.B = (byte)b;
+                this.Resources["lightSystemColor"] = new SolidColorBrush(color);
+            }
+            catch{}
         }
     }
 }

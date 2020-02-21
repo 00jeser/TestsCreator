@@ -79,6 +79,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Singlton.cs" />
     <Compile Include="Task.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -122,6 +123,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Python\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\new.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

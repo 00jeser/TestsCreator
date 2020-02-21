@@ -6,19 +6,54 @@
         xmlns:local="clr-namespace:TestCreator"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" MinWidth="300">
-    <Grid Background="#FF636363">
-        <ListBox x:Name="tasksList" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Background="{x:Null}" BorderBrush="{x:Null}" Grid.IsSharedSizeScope="True" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+    <Window.Resources>
+        <SolidColorBrush x:Key="systemColor" Color="Blue"/>
+        <SolidColorBrush x:Key="lightSystemColor" Color="Blue"/>
+        <Style x:Key="MenuButtons" TargetType="{x:Type Button}">
+            <Setter Property="MinHeight">
+                <Setter.Value>
+                    28
+                </Setter.Value>
+            </Setter>
+            <Setter Property="MinWidth">
+                <Setter.Value>
+                    28
+                </Setter.Value>
+            </Setter>
+            <!-- <Setter Property="Background" Value="{DynamicResource ResourceKey=systemColor}"/> -->
+        </Style>
+    </Window.Resources>
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <WrapPanel Background="{DynamicResource systemColor}">
+            <Button Margin="1" Style="{StaticResource MenuButtons}" ToolTip="Новый">
+                <Image Source="Pictures/new.png" Margin="2"/>
+            </Button>
+            <Button Margin="1" Style="{StaticResource MenuButtons}" ToolTip="Сохранить">
+                <Image Source="Pictures/save.png" Margin="2"/>
+            </Button>
+        </WrapPanel>
+        <ListBox x:Name="tasksList" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Background="{x:Null}" BorderBrush="{x:Null}" Grid.IsSharedSizeScope="True" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="1">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Focusable" Value="False"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Border Background="#FF959595" BorderBrush="{x:Null}" BorderThickness="1" CornerRadius="8,8,3,3">
+                    <Border BorderThickness="3" CornerRadius="0,0,3,3" BorderBrush="{DynamicResource lightSystemColor}" Background="White" Margin="-3,0">
                         <Grid MinHeight="100">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding Path=Info}" VerticalAlignment="Stretch" Grid.ColumnSpan="2" FontSize="15" HorizontalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Visible" TextWrapping="Wrap" Margin="0,0,0,50"/>
-                            <Button HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Content="Изменить" Grid.Column="0" Margin="3"/>
-                            <Button HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Content="Удалить" Grid.Column="1" Margin="3"/>
+                            <Rectangle Fill="{DynamicResource lightSystemColor}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="8"/>
+                            <TextBlock Text="{Binding Path=Info}" VerticalAlignment="Stretch" Grid.ColumnSpan="2" FontSize="15" HorizontalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Visible" TextWrapping="Wrap" Margin="3,10,3,50"/>
+                            <Button HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Content="Изменить" Grid.Column="0" Margin="2"/>
+                            <Button HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Content="Удалить" Grid.Column="1" Margin="2"/>
                         </Grid>
                     </Border>
                 </DataTemplate>
