@@ -26,6 +26,17 @@ namespace TestCreator
 
         [JsonProperty("variables")]
         public Variable[] vars;
+
+        [JsonProperty("equation")]
+        public string math;
+        [JsonIgnore]
+        public string Info { get 
+            {
+                if (type)
+                    return task + "\n" + math;
+                else
+                    return string.Join(";\n\n", tasks);
+            } }
     }
 
     public class Variable
@@ -39,4 +50,5 @@ namespace TestCreator
         [JsonProperty("choice")]
         public string[] lst;
     }
+
 }

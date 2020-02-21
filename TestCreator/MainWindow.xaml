@@ -5,8 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestCreator"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="MainWindow" Height="450" Width="800" MinWidth="300">
+    <Grid Background="#FF636363">
+        <ListBox x:Name="tasksList" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Background="{x:Null}" BorderBrush="{x:Null}" Grid.IsSharedSizeScope="True" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Background="#FF959595" BorderBrush="{x:Null}" BorderThickness="1" CornerRadius="8,8,3,3">
+                        <Grid MinHeight="100">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Path=Info}" VerticalAlignment="Stretch" Grid.ColumnSpan="2" FontSize="15" HorizontalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Visible" TextWrapping="Wrap" Margin="0,0,0,50"/>
+                            <Button HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Content="Изменить" Grid.Column="0" Margin="3"/>
+                            <Button HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Content="Удалить" Grid.Column="1" Margin="3"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </Window>
