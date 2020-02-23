@@ -25,10 +25,9 @@ namespace TestCreator
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<Task> lst = JsonConvert.DeserializeObject<List<Task>>(File.ReadAllText("F:\\txt.json"));
+        List<Task> lst = JsonConvert.DeserializeObject<List<Task>>(File.ReadAllText("txt.json"));
 
-        Task draggingO;
-        int draggingN;
+        public bool someSelect = false;
 
         public MainWindow()
         {
@@ -39,15 +38,44 @@ namespace TestCreator
             {
                 string colorizationValue = string.Format("{0:x}", Microsoft.Win32.Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM", "ColorizationColor", "00000000"));
                 Color color = (Color)ColorConverter.ConvertFromString("#" + colorizationValue);
-                this.Resources["systemColor"] = new SolidColorBrush(color);
                 float r = color.R, g = color.G, b = color.B, h = 0, s = 0, v = 0;
                 Singlton.RGBtoHSV(r, g, b, out h, out s, out v);
-                s /= 2;
+                s = 1;
+                Singlton.HSVtoRGB(h, s, v, out r, out g, out b);
+                color.R = (byte)r; color.G = (byte)g; color.B = (byte)b;
+                this.Resources["systemColor"] = new SolidColorBrush(color);
+                s = 120;
                 Singlton.HSVtoRGB(h, s, v, out r, out g, out b);
                 color.R = (byte)r; color.G = (byte)g; color.B = (byte)b;
                 this.Resources["lightSystemColor"] = new SolidColorBrush(color);
             }
             catch{}
+        }
+
+        private void close(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void maximize(object sender, RoutedEventArgs e)
+        {
+            this.WindowState =this.WindowState == WindowState.Maximized?WindowState.Normal:WindowState.Maximized;
+        }
+
+        private void minimize(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (this.Width >= 540) ProjName.Visibility = Visibility.Visible; else ProjName.Visibility = Visibility.Hidden;
         }
     }
 }

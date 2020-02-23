@@ -130,5 +130,17 @@
   <ItemGroup>
     <Resource Include="Pictures\new.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\close.png" />
+    <Resource Include="Pictures\max.png" />
+    <Resource Include="Pictures\min.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\Add.png" />
+    <Resource Include="Pictures\AddVar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\Export.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

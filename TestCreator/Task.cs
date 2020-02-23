@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using Newtonsoft.Json;
 
 namespace TestCreator
@@ -17,9 +18,10 @@ namespace TestCreator
         [JsonIgnore]
         public List<string> Tasks { get { return new List<string>(tasks); } set { tasks = value.ToArray(); } }
         [JsonProperty("answers")]
+
         private string[] answ;
         [JsonIgnore]
-        public List<string> Answ{ get { return new List<string>(answ); } set { answ = value.ToArray(); } }
+        public List<string> Answ { get { return new List<string>(answ); } set { answ = value.ToArray(); } }
 
         [JsonProperty("task")]
         public string task;
@@ -30,10 +32,10 @@ namespace TestCreator
         [JsonProperty("equation")]
         public string math;
         [JsonIgnore]
-        public string Info { get 
+        public string Info { get
             {
                 if (type)
-                    return task + "\n" + math;
+                    return task + ";\n\n" + math;
                 else
                     return string.Join(";\n\n", tasks);
             } }
