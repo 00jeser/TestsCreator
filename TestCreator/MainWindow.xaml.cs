@@ -77,5 +77,20 @@ namespace TestCreator
         {
             if (this.Width >= 540) ProjName.Visibility = Visibility.Visible; else ProjName.Visibility = Visibility.Hidden;
         }
+
+        private void tasksList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            (tasksList.SelectedItem as Task).select = true;
+        }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            tasksList.Focus();
+        }
+
+        private void focusList(object sender, RoutedEventArgs e)
+        {
+            tasksList.Focus();
+        }
     }
 }

@@ -142,5 +142,9 @@
   <ItemGroup>
     <Resource Include="Pictures\Export.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pictures\del.png" />
+    <Resource Include="Pictures\edit.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

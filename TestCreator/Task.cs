@@ -32,13 +32,30 @@ namespace TestCreator
         [JsonProperty("equation")]
         public string math;
         [JsonIgnore]
-        public string Info { get
+        public string Info
+        {
+            get
             {
                 if (type)
                     return task + ";\n\n" + math;
                 else
                     return string.Join(";\n\n", tasks);
-            } }
+            }
+        }
+
+        [JsonIgnore]
+        public bool select 
+        {
+            set 
+            {
+                if (value)
+                    selectBrush = new SolidColorBrush(new Color { A = 255, R = 230, G = 0, B = 255 });
+                else
+                    selectBrush = new SolidColorBrush(Colors.Transparent);
+            }
+        }
+        [JsonIgnore]
+        public SolidColorBrush selectBrush { get; set; }
     }
 
     public class Variable
