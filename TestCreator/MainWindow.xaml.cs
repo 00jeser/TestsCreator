@@ -38,6 +38,7 @@ namespace TestCreator
             {
                 string colorizationValue = string.Format("{0:x}", Microsoft.Win32.Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM", "ColorizationColor", "00000000"));
                 Color color = (Color)ColorConverter.ConvertFromString("#" + colorizationValue);
+                color.A = 200;
                 float r = color.R, g = color.G, b = color.B, h = 0, s = 0, v = 0;
                 Singlton.RGBtoHSV(r, g, b, out h, out s, out v);
                 s = 1;
@@ -76,6 +77,7 @@ namespace TestCreator
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (this.Width >= 540) ProjName.Visibility = Visibility.Visible; else ProjName.Visibility = Visibility.Hidden;
+            if (this.WindowState == WindowState.Maximized) mainBorder.BorderThickness = new Thickness(7.2); else mainBorder.BorderThickness = new Thickness(0);
         }
 
         private void tasksList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -89,6 +91,11 @@ namespace TestCreator
         }
 
         private void focusList(object sender, RoutedEventArgs e)
+        {
+            tasksList.Focus();
+        }
+
+        private void Border_MouseUp(object sender, MouseButtonEventArgs e)
         {
             tasksList.Focus();
         }
