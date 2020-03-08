@@ -17,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
+using TestCreator.Properties;
 
 namespace TestCreator
 {
@@ -25,7 +26,6 @@ namespace TestCreator
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<Task> lst = JsonConvert.DeserializeObject<List<Task>>(File.ReadAllText("txt.json"));
 
         public bool someSelect = false;
 
@@ -33,51 +33,44 @@ namespace TestCreator
         {
             InitializeComponent();
 
-            tasksList.ItemsSource = lst;
+            tasksList.ItemsSource = Singlton.tasks;
+            Singlton.StyleChanged += Singlton_StyleChanged;
+            Singlton.FontColorChanged += Singlton_FontColorChanged;
+            Singlton.FontSizeChanged += Singlton_FontSizeChanged;
             try
             {
-                string colorizationValue = string.Format("{0:x}", Microsoft.Win32.Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM", "ColorizationColor", "00000000"));
-                Color color = (Color)ColorConverter.ConvertFromString("#" + colorizationValue);
-                color.A = 200;
-                float r = color.R, g = color.G, b = color.B, h = 0, s = 0, v = 0;
-                Singlton.RGBtoHSV(r, g, b, out h, out s, out v);
-                s = 1;
-                Singlton.HSVtoRGB(h, s, v, out r, out g, out b);
-                color.R = (byte)r; color.G = (byte)g; color.B = (byte)b;
-                this.Resources["systemColor"] = new SolidColorBrush(color);
-                s = 120;
-                Singlton.HSVtoRGB(h, s, v, out r, out g, out b);
-                color.R = (byte)r; color.G = (byte)g; color.B = (byte)b;
-                this.Resources["lightSystemColor"] = new SolidColorBrush(color);
+                this.Resources["Color1"] = Settings.Default["Color1"];
+                this.Resources["Color2"] = Settings.Default["Color2"];
+                this.Resources["ColorF"] = Settings.Default["ColorF"];
             }
-            catch{}
+            catch { }
         }
 
-        private void close(object sender, RoutedEventArgs e)
+        private void Singlton_FontSizeChanged(object v)
         {
-            Application.Current.Shutdown();
+            this.Resources["FontSize"] = v;
         }
 
-        private void maximize(object sender, RoutedEventArgs e)
+        private void OpenSettings(object sender, RoutedEventArgs e)
         {
-            this.WindowState =this.WindowState == WindowState.Maximized?WindowState.Normal:WindowState.Maximized;
+            SettingsWindow sw = new SettingsWindow();
+            sw.Show();
+            sw.Focus();
         }
 
-        private void minimize(object sender, RoutedEventArgs e)
+        private void Singlton_FontColorChanged(object v)
         {
-            this.WindowState = WindowState.Minimized;
+            this.Resources["ColorF"] = v;
         }
 
-        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Singlton_StyleChanged(SolidColorBrush color1, SolidColorBrush color2)
         {
-            if (e.ChangedButton == MouseButton.Left)
-                this.DragMove();
+            this.Resources["Color1"] = color1;
+            this.Resources["Color2"] = color2;
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (this.Width >= 540) ProjName.Visibility = Visibility.Visible; else ProjName.Visibility = Visibility.Hidden;
-            if (this.WindowState == WindowState.Maximized) mainBorder.BorderThickness = new Thickness(7.2); else mainBorder.BorderThickness = new Thickness(0);
         }
 
         private void tasksList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -92,7 +85,8 @@ namespace TestCreator
 
         private void focusList(object sender, RoutedEventArgs e)
         {
-            tasksList.Focus();
+            if (sender != sett)
+                tasksList.Focus();
         }
 
         private void Border_MouseUp(object sender, MouseButtonEventArgs e)

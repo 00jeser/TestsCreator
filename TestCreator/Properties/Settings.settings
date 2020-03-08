@@ -1,7 +1,18 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TestCreator.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Color1" Type="System.Windows.Media.SolidColorBrush" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Color2" Type="System.Windows.Media.SolidColorBrush" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ColorF" Type="System.Windows.Media.SolidColorBrush" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SizeF" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">13</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>
