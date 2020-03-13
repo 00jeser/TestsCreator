@@ -64,7 +64,7 @@ namespace TestCreator
                     float r = color.R, g = color.G, b = color.B;
                     float s, v;
                     Singlton.RGBtoHSV(r, g, b, out _, out s, out v);
-                    if (s >= 191 || v >= 191)
+                    if (s >= 195 || v >= 195)
                     {
                         Singlton.ColorF = new SolidColorBrush(Colors.Black);
                     }

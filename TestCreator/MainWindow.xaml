@@ -127,8 +127,8 @@
                         </Setter>
                     </Style>
                 </TabControl.Resources>
-                <TabItem Header="Файл" BorderBrush="{x:Null}" Background="White">
-                    <Grid Background="White">
+                <TabItem Header="Файл" BorderBrush="{x:Null}" Background="Black" Padding="0">
+                    <Grid Background="White" Margin="0">
                         <WrapPanel Margin="0,0,40,0">
                             <Button Style="{DynamicResource MenuButton}">
                                 <Grid>

@@ -17,7 +17,7 @@ namespace TestCreator
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            if (Settings.Default["Color1"] == null || true)
+            if (Settings.Default["Color1"] == null)
             {
                 string colorizationValue = string.Format("{0:x}", Microsoft.Win32.Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM", "ColorizationColor", "00000000"));
                 Color color = (Color)ColorConverter.ConvertFromString("#" + colorizationValue);
@@ -29,7 +29,7 @@ namespace TestCreator
                 float r = color.R, g = color.G, b = color.B;
                 float s, v;
                 Singlton.RGBtoHSV(r, g, b, out _, out s, out v);
-                if (s >= 191 || v >= 191)
+                if (s >= 195 || v >= 195)
                 {
                     Settings.Default.ColorF = new SolidColorBrush(Colors.Black);
                 }
