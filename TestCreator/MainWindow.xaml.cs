@@ -18,6 +18,7 @@ using System.Windows.Shapes;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using TestCreator.Properties;
+using System.Diagnostics;
 
 namespace TestCreator
 {
@@ -75,7 +76,7 @@ namespace TestCreator
 
         private void tasksList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            (tasksList.SelectedItem as Task).select = true;
+            EditButton.IsEnabled = tasksList.SelectedIndex != -1;
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -92,6 +93,53 @@ namespace TestCreator
         private void Border_MouseUp(object sender, MouseButtonEventArgs e)
         {
             tasksList.Focus();
+        }
+
+        private void EditItem(object sender, RoutedEventArgs e)
+    {
+            var i = (Task)tasksList.SelectedItem;
+            if (i.type)
+            {
+                Edit1Grid.Visibility = Visibility.Visible;
+                E1TText.Text = i.task;
+                E1TVars.ItemsSource = i.visualVars;
+            }
+        }
+
+        private void DeleteItem(object sender, RoutedEventArgs e)
+        {
+            if (tasksList.SelectedIndex != -1)
+            {
+                Singlton.tasks.RemoveAt(tasksList.SelectedIndex);
+                tasksList.ItemsSource = "";
+                tasksList.ItemsSource = Singlton.tasks;
+            }
+        }
+
+        private void EditGrid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Edit1Grid.Visibility = Visibility.Hidden;
+            EditSomeGrid.Visibility = Visibility.Hidden;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var vars = new List<Variable>();
+            foreach (VisualVars i in E1TVars.Items) 
+            {
+                Variable v = new Variable();
+                if (i.Value.IndexOf(';') != -1)
+                {
+                    v.lst = i.Value.Split().Select(s => s.Trim()).ToArray();
+                }
+                else 
+                {
+                    v.Range = i.Value;
+                }
+                vars.Add(v);
+            }
+            Debug.WriteLine(tasksList.SelectedIndex);
+            Singlton.tasks[tasksList.SelectedIndex].vars = vars.ToArray();
         }
     }
 }

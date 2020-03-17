@@ -173,13 +173,13 @@
                                 </Grid>
                             </Button>
                             <Rectangle Width="10"/>
-                            <Button Style="{DynamicResource MenuButton}">
+                            <Button x:Name="EditButton" IsEnabled="False" Style="{DynamicResource MenuButton}" Click="EditItem">
                                 <Grid>
                                     <Image Margin="0,0,0,10" Source="Pictures/edit.png"/>
                                     <TextBlock Text="Изменить" VerticalAlignment="Bottom" Margin="0,0,0,-2"/>
                                 </Grid>
                             </Button>
-                            <Button Style="{DynamicResource MenuButton}">
+                            <Button Style="{DynamicResource MenuButton}" Click="DeleteItem">
                                 <Grid>
                                     <Image Margin="0,0,0,10" Source="Pictures/del.png"/>
                                     <TextBlock Text="Удалить" VerticalAlignment="Bottom" Margin="0,0,0,-2"/>
@@ -202,7 +202,7 @@
                 </TabItem>
             </TabControl>
 
-            
+
 
             <ListBox x:Name="tasksList" SelectionChanged="tasksList_SelectionChanged" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Background="White" BorderBrush="{x:Null}" Grid.IsSharedSizeScope="True" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="1">
                 <!--
@@ -227,6 +227,34 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            <Grid x:Name="Edit1Grid" Visibility="Hidden" Background="#7F343434" Grid.IsSharedSizeScope="True" ScrollViewer.CanContentScroll="True" Grid.Row="1" MouseDown="EditGrid_MouseDown">
+                <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" Margin="20" Background="White">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="20" Text="Текст задачи" Margin="3,3,0,0"/>
+                        <TextBox x:Name="E1TText" VerticalAlignment="Top" Margin="100,3,3,0" Height="200" TextWrapping="Wrap" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" FontSize="{DynamicResource FontSize}" Grid.ColumnSpan="2"/>
+                        <DataGrid  x:Name="E1TVars" VerticalAlignment="Top" Margin="0,206,0,0" AutoGenerateColumns="False" FontSize="{DynamicResource FontSize}" Grid.ColumnSpan="2">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Название" Binding="{Binding Path=Name}"/>
+                                <DataGridTextColumn Header="Значение" Binding="{Binding Path=Value}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button VerticalAlignment="Bottom" Click="Button_Click" Height="26" Margin="3,0,3,3"/>
+                        <Button VerticalAlignment="Bottom" Click="Button_Click" Height="26" Margin="3,0,3,3" Grid.Column="1"/>
+                        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="100" Height="50" Text="Формула решения задачи" Margin="3,0,0,80" TextWrapping="Wrap"/>
+                        <TextBox x:Name="E1TFormula" VerticalAlignment="Bottom" Margin="100,0,3,30" Height="100" TextWrapping="Wrap" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" FontSize="{DynamicResource FontSize}" Grid.ColumnSpan="2"/>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+            <Grid x:Name="EditSomeGrid" Visibility="Hidden" Background="#7F343434" Grid.IsSharedSizeScope="True" ScrollViewer.CanContentScroll="True" Grid.Row="1" MouseDown="EditGrid_MouseDown">
+                <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" Margin="20" Background="White">
+                    <Grid>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
         </Grid>
     </Border>
 </Window>

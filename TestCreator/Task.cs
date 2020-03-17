@@ -29,6 +29,17 @@ namespace TestCreator
         [JsonProperty("variables")]
         public Variable[] vars;
 
+        [JsonIgnore]
+        public List<VisualVars> visualVars{ get
+            {
+                var ret = new List<VisualVars>();
+                foreach (var i in vars) 
+                {
+                    ret.Add(new VisualVars(i));
+                }
+                return ret;
+            } }
+
         [JsonProperty("equation")]
         public string math;
         [JsonIgnore]
@@ -61,13 +72,22 @@ namespace TestCreator
     public class Variable
     {
         [JsonProperty("name")]
-        public string Name;
+        public string Name { get; set; }
 
         [JsonProperty("range")]
-        public string Range;
+        public string Range { get; set; }
 
         [JsonProperty("choice")]
-        public string[] lst;
+        public string[] lst { get; set; }
     }
-
+    public class VisualVars
+    {
+        public string Name{get;set;}
+        public string Value { get; set; }
+        public VisualVars(Variable v) 
+        {
+            Name = v.Name;
+            Value = v.Range != null ? v.Range : string.Join("; ",v.lst);
+        }
+    }
 }
