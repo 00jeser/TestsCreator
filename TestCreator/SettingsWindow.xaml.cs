@@ -41,7 +41,7 @@ namespace TestCreator
                     break;
                 case "red":
                     Singlton.Color2 = new SolidColorBrush(new Color { R = 255, G = 33, B = 36, A = 255 });
-                    Singlton.Color1 = new SolidColorBrush(new Color { R = 163, G = 21, B = 23, A = 255 });
+                    Singlton.Color1 = new SolidColorBrush(new Color { R = 255, G = 90, B = 90, A = 255 });
                     Singlton.ColorF = new SolidColorBrush(Colors.White);
                     break;
                 case "green":

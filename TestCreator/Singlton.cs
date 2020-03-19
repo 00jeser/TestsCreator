@@ -30,7 +30,7 @@ namespace TestCreator
         static public event SettingD FontSizeChanged;
         static public event SettingD FontColorChanged;
 
-        static public List<Task> tasks = JsonConvert.DeserializeObject<List<Task>>(File.ReadAllText("txt.json"));
+        static public List<Task> tasks = new List<Task>();
 
         static void CreateJson()
         {

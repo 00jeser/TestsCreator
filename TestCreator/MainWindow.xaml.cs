@@ -85,7 +85,14 @@ namespace TestCreator
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            tasksList.Focus();
+            try
+            {
+                tasksList.Focus();
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         private void focusList(object sender, RoutedEventArgs e)
@@ -109,7 +116,7 @@ namespace TestCreator
                 E1TVars.ItemsSource = i.visualVars;
                 E1TFormula.Text = i.math;
             }
-            else 
+            else
             {
                 EditSomeGrid.Visibility = Visibility.Visible;
                 ESTTasks.ItemsSource = i.visualTasks;
@@ -169,10 +176,10 @@ namespace TestCreator
             var ans = new List<string>();
             foreach (object i in ESTTasks.Items)
             {
-                if ((i is VisualTasks)&&((i as VisualTasks).Text != ""))
+                if ((i is VisualTasks) && ((i as VisualTasks).Text != ""))
                 {
-                        tsk.Add((i as VisualTasks).Text);
-                        ans.Add((i as VisualTasks).Value);
+                    tsk.Add((i as VisualTasks).Text);
+                    ans.Add((i as VisualTasks).Value);
                 }
             }
             Singlton.tasks[tasksList.SelectedIndex].Tasks = tsk;
@@ -209,12 +216,12 @@ namespace TestCreator
             }
             lst.RemoveAll(s => s.Trim() == "");
             Debug.WriteLine(string.Join(" ", lst.ToArray()));
-            foreach (var i in Singlton.tasks[tasksList.SelectedIndex].visualVars) 
+            foreach (var i in Singlton.tasks[tasksList.SelectedIndex].visualVars)
             {
                 vrs[i.Name] = i.Value;
             }
             var vars = new List<VisualVars>();
-            foreach (var i in lst) 
+            foreach (var i in lst)
             {
                 var f = false;
                 foreach (var ii in vars) if (i == ii.Name) f = true;
@@ -231,5 +238,60 @@ namespace TestCreator
             E1TVars.ItemsSource = vars;
 
         }
+
+        private void tasksList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            EditItem(null, null);
+        }
+
+        private void NewWithVars(object sender, RoutedEventArgs e)
+        {
+            Singlton.tasks.Add(new Task() { type = true});
+            tasksList.ItemsSource = "";
+            tasksList.ItemsSource = Singlton.tasks;
+        }
+
+        private void NewWithotVars(object sender, RoutedEventArgs e)
+        {
+            Singlton.tasks.Add(new Task() { type = false});
+            tasksList.ItemsSource = "";
+            tasksList.ItemsSource = Singlton.tasks;
+        }
+
+        private void Save(object sender, RoutedEventArgs e)
+        {
+            var path = new Microsoft.Win32.SaveFileDialog();
+            path.ShowDialog();
+            SaveFile(path.FileName);
+        }
+
+        private void SaveAs(object sender, RoutedEventArgs e)
+        {
+            var path = new Microsoft.Win32.SaveFileDialog();
+            path.ShowDialog();
+            SaveFile(path.FileName);
+        }
+
+        private void SaveFile(string s)
+        {
+            File.WriteAllText(s, JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented));
+        }
+
+        private void NewFile(object sender, RoutedEventArgs e)
+        {
+            Singlton.tasks = new List<Task>();
+            tasksList.ItemsSource = "";
+            tasksList.ItemsSource = Singlton.tasks;
+        }
+
+        private void Open(object sender, RoutedEventArgs e)
+        {
+            var path = new Microsoft.Win32.OpenFileDialog();
+            path.ShowDialog();
+            Singlton.tasks = JsonConvert.DeserializeObject<List<Task>>(File.ReadAllText(path.FileName));
+            tasksList.ItemsSource = "";
+            tasksList.ItemsSource = Singlton.tasks;
+        }
+
     }
 }

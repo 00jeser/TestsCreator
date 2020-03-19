@@ -10,6 +10,16 @@ namespace TestCreator
 {
     public class Task
     {
+        public Task() 
+        {
+            type = false;
+            tasks = new string[0];
+            answ = new string[0];
+            task = "";
+            vars = new Variable[0];
+            math = "";
+
+        }
         [JsonProperty("vars")]
         public bool type;
 
@@ -70,19 +80,6 @@ namespace TestCreator
             }
         }
 
-        [JsonIgnore]
-        public bool select
-        {
-            set
-            {
-                if (value)
-                    selectBrush = new SolidColorBrush(new Color { A = 255, R = 230, G = 0, B = 255 });
-                else
-                    selectBrush = new SolidColorBrush(Colors.Transparent);
-            }
-        }
-        [JsonIgnore]
-        public SolidColorBrush selectBrush { get; set; }
     }
 
     public class Variable
