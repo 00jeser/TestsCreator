@@ -30,15 +30,31 @@ namespace TestCreator
         public Variable[] vars;
 
         [JsonIgnore]
-        public List<VisualVars> visualVars{ get
+        public List<VisualVars> visualVars
+        {
+            get
             {
                 var ret = new List<VisualVars>();
-                foreach (var i in vars) 
+                foreach (var i in vars)
                 {
                     ret.Add(new VisualVars(i));
                 }
                 return ret;
-            } }
+            }
+        }
+        [JsonIgnore]
+        public List<VisualTasks> visualTasks
+        {
+            get
+            {
+                var ret = new List<VisualTasks>();
+                for (int i = 0; i < tasks.Length; i++)
+                {
+                    ret.Add(new VisualTasks() { Text = tasks[i], Value = answ[i] });
+                }
+                return ret;
+            }
+        }
 
         [JsonProperty("equation")]
         public string math;
@@ -50,14 +66,14 @@ namespace TestCreator
                 if (type)
                     return task + ";\n\n" + math;
                 else
-                    return string.Join(";\n\n", tasks);
+                    return string.Join(";\n\\\n", tasks);
             }
         }
 
         [JsonIgnore]
-        public bool select 
+        public bool select
         {
-            set 
+            set
             {
                 if (value)
                     selectBrush = new SolidColorBrush(new Color { A = 255, R = 230, G = 0, B = 255 });
@@ -82,12 +98,24 @@ namespace TestCreator
     }
     public class VisualVars
     {
-        public string Name{get;set;}
+        public string Name { get; set; }
         public string Value { get; set; }
-        public VisualVars(Variable v) 
+        public VisualVars(Variable v)
         {
             Name = v.Name;
-            Value = v.Range != null ? v.Range : string.Join("; ",v.lst);
+            Value = v.Range != null ? v.Range : string.Join("; ", v.lst);
+        }
+
+        public VisualVars()
+        {
+        }
+    }
+    public class VisualTasks
+    {
+        public string Text { get; set; }
+        public string Value { get; set; }
+        public VisualTasks()
+        {
         }
     }
 }

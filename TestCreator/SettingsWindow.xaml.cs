@@ -80,5 +80,10 @@ namespace TestCreator
         {
             Singlton.SizeF = e.NewValue;
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Settings.Default.Save();
+        }
     }
 }

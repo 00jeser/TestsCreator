@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TestCreator"
         xmlns:p="clr-namespace:TestCreator.Properties"
         mc:Ignorable="d"
-        Title="SettingsWindow" Height="300" Width="500" WindowStyle="ToolWindow" ResizeMode="NoResize">
+        Title="SettingsWindow" Height="300" Width="500" WindowStyle="ToolWindow" ResizeMode="NoResize" Closing="Window_Closing">
     <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible">
         <Grid Height="1000">
             <Grid.ColumnDefinitions>

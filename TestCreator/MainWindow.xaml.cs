@@ -45,6 +45,9 @@ namespace TestCreator
                 this.Resources["ColorF"] = Settings.Default["ColorF"];
             }
             catch { }
+            if (this.Resources["ColorF"] == null)
+                this.Resources["ColorF"] = Brushes.White;
+            this.Resources["FontSize"] = Settings.Default.SizeF;
         }
 
         private void Singlton_FontSizeChanged(object v)
@@ -77,6 +80,7 @@ namespace TestCreator
         private void tasksList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             EditButton.IsEnabled = tasksList.SelectedIndex != -1;
+            DeleteButton.IsEnabled = tasksList.SelectedIndex != -1;
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -96,13 +100,19 @@ namespace TestCreator
         }
 
         private void EditItem(object sender, RoutedEventArgs e)
-    {
+        {
             var i = (Task)tasksList.SelectedItem;
             if (i.type)
             {
                 Edit1Grid.Visibility = Visibility.Visible;
                 E1TText.Text = i.task;
                 E1TVars.ItemsSource = i.visualVars;
+                E1TFormula.Text = i.math;
+            }
+            else 
+            {
+                EditSomeGrid.Visibility = Visibility.Visible;
+                ESTTasks.ItemsSource = i.visualTasks;
             }
         }
 
@@ -122,24 +132,104 @@ namespace TestCreator
             EditSomeGrid.Visibility = Visibility.Hidden;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void E1TEnd(object sender, RoutedEventArgs e)
         {
             var vars = new List<Variable>();
-            foreach (VisualVars i in E1TVars.Items) 
+            foreach (object i in E1TVars.Items)
             {
-                Variable v = new Variable();
-                if (i.Value.IndexOf(';') != -1)
+                if (i is VisualVars)
                 {
-                    v.lst = i.Value.Split().Select(s => s.Trim()).ToArray();
+                    VisualVars ii = (i as VisualVars);
+                    Variable v = new Variable();
+                    v.Name = ii.Name;
+                    if (ii.Value.IndexOf(';') != -1)
+                    {
+                        v.lst = ii.Value.Split(';').Select(s => s.Trim()).ToArray();
+                    }
+                    else
+                    {
+                        v.Range = ii.Value;
+                    }
+                    vars.Add(v);
                 }
-                else 
-                {
-                    v.Range = i.Value;
-                }
-                vars.Add(v);
             }
             Debug.WriteLine(tasksList.SelectedIndex);
             Singlton.tasks[tasksList.SelectedIndex].vars = vars.ToArray();
+            Singlton.tasks[tasksList.SelectedIndex].task = E1TText.Text;
+            Singlton.tasks[tasksList.SelectedIndex].math = E1TFormula.Text;
+            tasksList.ItemsSource = "";
+            tasksList.ItemsSource = Singlton.tasks;
+            Edit1Grid.Visibility = Visibility.Hidden;
+            EditSomeGrid.Visibility = Visibility.Hidden;
+            tasksList.Focus();
+        }
+        private void ESTEnd(object sender, RoutedEventArgs e)
+        {
+            var tsk = new List<string>();
+            var ans = new List<string>();
+            foreach (object i in ESTTasks.Items)
+            {
+                if ((i is VisualTasks)&&((i as VisualTasks).Text != ""))
+                {
+                        tsk.Add((i as VisualTasks).Text);
+                        ans.Add((i as VisualTasks).Value);
+                }
+            }
+            Singlton.tasks[tasksList.SelectedIndex].Tasks = tsk;
+            Singlton.tasks[tasksList.SelectedIndex].Answ = ans;
+            tasksList.ItemsSource = "";
+            tasksList.ItemsSource = Singlton.tasks;
+            Edit1Grid.Visibility = Visibility.Hidden;
+            EditSomeGrid.Visibility = Visibility.Hidden;
+            tasksList.Focus();
+        }
+
+        private void E1TText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var vrs = new Dictionary<string, string>();
+            var openFlag = false;
+            var lst = new List<string>();
+            foreach (char i in E1TText.Text)
+            {
+                if (openFlag)
+                {
+                    if (i == '}')
+                        openFlag = false;
+                    else
+                        lst[lst.Count - 1] += i;
+                }
+                else
+                {
+                    if (i == '{')
+                    {
+                        openFlag = true;
+                        lst.Add("");
+                    }
+                }
+            }
+            lst.RemoveAll(s => s.Trim() == "");
+            Debug.WriteLine(string.Join(" ", lst.ToArray()));
+            foreach (var i in Singlton.tasks[tasksList.SelectedIndex].visualVars) 
+            {
+                vrs[i.Name] = i.Value;
+            }
+            var vars = new List<VisualVars>();
+            foreach (var i in lst) 
+            {
+                var f = false;
+                foreach (var ii in vars) if (i == ii.Name) f = true;
+                if (f) continue;
+                try
+                {
+                    vars.Add(new VisualVars() { Name = i, Value = vrs[i] });
+                }
+                catch
+                {
+                    vars.Add(new VisualVars() { Name = i });
+                }
+            }
+            E1TVars.ItemsSource = vars;
+
         }
     }
 }
