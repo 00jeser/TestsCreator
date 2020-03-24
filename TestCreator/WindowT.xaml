@@ -1,0 +1,14 @@
+﻿<Window x:Class="TestCreator.WindowT"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:Microsoft.Windows.Shell;assembly=Xceed.Wpf.AvalonDock"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestCreator"
+        mc:Ignorable="d"
+        Title="WindowT" Foreground="Red" BorderBrush="Red" OpacityMask="Red">
+    
+    <Grid Background="White">
+        
+    </Grid>
+</Window>

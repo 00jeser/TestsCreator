@@ -242,7 +242,7 @@
 
 
 
-            <ListBox MouseDoubleClick="tasksList_MouseDoubleClick" x:Name="tasksList" SelectionChanged="tasksList_SelectionChanged" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Background="White" BorderBrush="{x:Null}" Grid.IsSharedSizeScope="True" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="1">
+            <ListBox MouseDoubleClick="tasksList_MouseDoubleClick" x:Name="tasksList" SelectionChanged="tasksList_SelectionChanged" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Background="White" BorderBrush="{x:Null}" Grid.IsSharedSizeScope="True" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="1">
                 
                 <ListBox.ItemTemplate>
                     <DataTemplate>

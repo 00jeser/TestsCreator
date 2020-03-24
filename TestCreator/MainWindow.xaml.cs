@@ -29,6 +29,7 @@ namespace TestCreator
     {
 
         public bool someSelect = false;
+        public string SaveFolder;
 
         public MainWindow()
         {
@@ -48,6 +49,8 @@ namespace TestCreator
             if (this.Resources["ColorF"] == null)
                 this.Resources["ColorF"] = Brushes.White;
             this.Resources["FontSize"] = Settings.Default.SizeF;
+            WindowT window = new WindowT();
+            window.Show();
         }
 
         private void Singlton_FontSizeChanged(object v)
@@ -246,30 +249,47 @@ namespace TestCreator
 
         private void NewWithVars(object sender, RoutedEventArgs e)
         {
-            Singlton.tasks.Add(new Task() { type = true});
+            Singlton.tasks.Add(new Task() { type = true });
             tasksList.ItemsSource = "";
             tasksList.ItemsSource = Singlton.tasks;
         }
 
         private void NewWithotVars(object sender, RoutedEventArgs e)
         {
-            Singlton.tasks.Add(new Task() { type = false});
+            Singlton.tasks.Add(new Task() { type = false });
             tasksList.ItemsSource = "";
             tasksList.ItemsSource = Singlton.tasks;
         }
 
         private void Save(object sender, RoutedEventArgs e)
         {
-            var path = new Microsoft.Win32.SaveFileDialog();
-            path.ShowDialog();
-            SaveFile(path.FileName);
+            if (SaveFolder == "")
+            {
+                try
+                {
+                    var path = new Microsoft.Win32.SaveFileDialog();
+                    path.ShowDialog();
+                    SaveFolder = path.FileName;
+                    SaveFile(path.FileName);
+                }
+                catch { }
+            }
+            else
+            {
+                SaveFile(SaveFolder);
+            }
         }
 
         private void SaveAs(object sender, RoutedEventArgs e)
         {
-            var path = new Microsoft.Win32.SaveFileDialog();
-            path.ShowDialog();
-            SaveFile(path.FileName);
+            try
+            {
+                var path = new Microsoft.Win32.SaveFileDialog();
+                path.ShowDialog();
+                SaveFolder = path.FileName;
+                SaveFile(path.FileName);
+            }
+            catch { }
         }
 
         private void SaveFile(string s)
@@ -282,12 +302,14 @@ namespace TestCreator
             Singlton.tasks = new List<Task>();
             tasksList.ItemsSource = "";
             tasksList.ItemsSource = Singlton.tasks;
+            SaveFolder = "";
         }
 
         private void Open(object sender, RoutedEventArgs e)
         {
             var path = new Microsoft.Win32.OpenFileDialog();
             path.ShowDialog();
+            SaveFolder = path.FileName;
             Singlton.tasks = JsonConvert.DeserializeObject<List<Task>>(File.ReadAllText(path.FileName));
             tasksList.ItemsSource = "";
             tasksList.ItemsSource = Singlton.tasks;
