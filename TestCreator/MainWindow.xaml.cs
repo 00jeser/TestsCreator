@@ -356,7 +356,7 @@ namespace TestCreator
             }
         }
 
-        private void LostSave() 
+        private void LostSave()
         {
             SaveF = false;
             if (SaveFolder != null)
@@ -367,7 +367,40 @@ namespace TestCreator
 
         private void Grid_DragEnter(object sender, DragEventArgs e)
         {
-                this.WindowState = WindowState.Normal;
+            this.WindowState = WindowState.Normal;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            WordExport export = new WordExport();
+            export.Show();
+        }
+
+        bool ControlPress = false;
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete)
+                DeleteItem(null, null);
+            if (e.Key == Key.S && ControlPress)
+            {
+                if (SaveFolder != "" && SaveFolder != null)
+                    SaveFile(SaveFolder);
+                else 
+                {
+                    var path = new Microsoft.Win32.SaveFileDialog();
+                    path.ShowDialog();
+                    SaveFolder = path.FileName;
+                    SaveFile(path.FileName);
+                }
+            }
+            if (e.Key == Key.RightCtrl|| e.Key == Key.LeftCtrl)
+                ControlPress = true;
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.RightCtrl || e.Key == Key.LeftCtrl)
+                ControlPress = false;
         }
     }
 }

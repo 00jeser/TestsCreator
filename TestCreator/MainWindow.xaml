@@ -8,7 +8,7 @@
         xmlns:controls="clr-namespace:WpfMath.Controls;assembly=WpfMath"
         xmlns:clr="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="123" MinWidth="300" WindowStyle="None" SizeChanged="Window_SizeChanged">
+        Title="123" MinWidth="300" WindowStyle="None" WindowState="Maximized" SizeChanged="Window_SizeChanged" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp">
     <WindowChrome.WindowChrome>
         <WindowChrome 
         CaptionHeight="0"
@@ -382,10 +382,10 @@
                 <TabItem Header="Экспорт" BorderBrush="{x:Null}" Background="White">
                     <Grid x:Name="g3" Margin="0" Background="White">
                         <WrapPanel>
-                            <Button Style="{DynamicResource MenuButton}">
+                            <Button Style="{DynamicResource MenuButton}" Click="Button_Click">
                                 <Grid>
                                     <Image Margin="0,0,0,10" Source="Pictures/Export.png"/>
-                                    <TextBlock Text="Экспорт" VerticalAlignment="Bottom" Margin="0,0,0,-2"/>
+                                    <TextBlock Text="Экспорт в word" VerticalAlignment="Bottom" Margin="0,0,0,-2"/>
                                 </Grid>
                             </Button>
                         </WrapPanel>
