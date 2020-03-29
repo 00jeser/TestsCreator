@@ -30,10 +30,19 @@ namespace TestCreator
 
         public bool someSelect = false;
         public string SaveFolder;
+        public bool SaveF = true;
 
         public MainWindow()
         {
             InitializeComponent();
+            var s = Environment.OSVersion.Version.Minor;
+            if (Environment.OSVersion.Version.Minor == 1)
+            {
+                g1.Margin = new Thickness(-2);
+                g2.Margin = new Thickness(-2);
+                g3.Margin = new Thickness(-2);
+            }
+            ProjName.Text = s.ToString();
 
             tasksList.ItemsSource = Singlton.tasks;
             Singlton.StyleChanged += Singlton_StyleChanged;
@@ -49,8 +58,6 @@ namespace TestCreator
             if (this.Resources["ColorF"] == null)
                 this.Resources["ColorF"] = Brushes.White;
             this.Resources["FontSize"] = Settings.Default.SizeF;
-            WindowT window = new WindowT();
-            window.Show();
         }
 
         private void Singlton_FontSizeChanged(object v)
@@ -78,6 +85,8 @@ namespace TestCreator
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            if (this.Width >= 540) ProjName.Visibility = Visibility.Visible; else ProjName.Visibility = Visibility.Hidden;
+            if (this.WindowState == WindowState.Maximized) mainBorder.BorderThickness = new Thickness(7); else mainBorder.BorderThickness = new Thickness(0);
         }
 
         private void tasksList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -124,6 +133,7 @@ namespace TestCreator
                 EditSomeGrid.Visibility = Visibility.Visible;
                 ESTTasks.ItemsSource = i.visualTasks;
             }
+            LostSave();
         }
 
         private void DeleteItem(object sender, RoutedEventArgs e)
@@ -133,6 +143,7 @@ namespace TestCreator
                 Singlton.tasks.RemoveAt(tasksList.SelectedIndex);
                 tasksList.ItemsSource = "";
                 tasksList.ItemsSource = Singlton.tasks;
+                LostSave();
             }
         }
 
@@ -245,6 +256,7 @@ namespace TestCreator
         private void tasksList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             EditItem(null, null);
+            LostSave();
         }
 
         private void NewWithVars(object sender, RoutedEventArgs e)
@@ -252,6 +264,7 @@ namespace TestCreator
             Singlton.tasks.Add(new Task() { type = true });
             tasksList.ItemsSource = "";
             tasksList.ItemsSource = Singlton.tasks;
+            LostSave();
         }
 
         private void NewWithotVars(object sender, RoutedEventArgs e)
@@ -259,6 +272,7 @@ namespace TestCreator
             Singlton.tasks.Add(new Task() { type = false });
             tasksList.ItemsSource = "";
             tasksList.ItemsSource = Singlton.tasks;
+            LostSave();
         }
 
         private void Save(object sender, RoutedEventArgs e)
@@ -294,6 +308,8 @@ namespace TestCreator
 
         private void SaveFile(string s)
         {
+            SaveF = true;
+            ProjName.Text = s.Split('\\').Last().Split('.')[0];
             File.WriteAllText(s, JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented));
         }
 
@@ -313,7 +329,45 @@ namespace TestCreator
             Singlton.tasks = JsonConvert.DeserializeObject<List<Task>>(File.ReadAllText(path.FileName));
             tasksList.ItemsSource = "";
             tasksList.ItemsSource = Singlton.tasks;
+            SaveF = true;
+            ProjName.Text = path.FileName.Split('\\').Last().Split('.')[0];
         }
 
+        private void close(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void maximize(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+        }
+
+        private void minimize(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
+        }
+
+        private void LostSave() 
+        {
+            SaveF = false;
+            if (SaveFolder != null)
+                ProjName.Text = SaveFolder.Split('\\').Last().Split('.')[0] + "*";
+            else
+                ProjName.Text = "Новый тест*";
+        }
+
+        private void Grid_DragEnter(object sender, DragEventArgs e)
+        {
+                this.WindowState = WindowState.Normal;
+        }
     }
 }
