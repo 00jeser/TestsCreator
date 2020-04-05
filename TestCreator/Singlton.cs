@@ -32,6 +32,8 @@ namespace TestCreator
 
         static public List<Task> tasks = new List<Task>();
 
+        static public List<List<Task>> history = new List<List<Task>>();
+
         static void CreateJson()
         {
             List<Task> lst = new List<Task>();

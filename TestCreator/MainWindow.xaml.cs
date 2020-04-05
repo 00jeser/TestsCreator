@@ -120,6 +120,7 @@ namespace TestCreator
 
         private void EditItem(object sender, RoutedEventArgs e)
         {
+            LostSave();
             var i = (Task)tasksList.SelectedItem;
             if (i.type)
             {
@@ -133,17 +134,16 @@ namespace TestCreator
                 EditSomeGrid.Visibility = Visibility.Visible;
                 ESTTasks.ItemsSource = i.visualTasks;
             }
-            LostSave();
         }
 
         private void DeleteItem(object sender, RoutedEventArgs e)
         {
             if (tasksList.SelectedIndex != -1)
             {
+                LostSave();
                 Singlton.tasks.RemoveAt(tasksList.SelectedIndex);
                 tasksList.ItemsSource = "";
                 tasksList.ItemsSource = Singlton.tasks;
-                LostSave();
             }
         }
 
@@ -255,24 +255,24 @@ namespace TestCreator
 
         private void tasksList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            EditItem(null, null);
             LostSave();
+            EditItem(null, null);
         }
 
         private void NewWithVars(object sender, RoutedEventArgs e)
         {
+            LostSave();
             Singlton.tasks.Add(new Task() { type = true });
             tasksList.ItemsSource = "";
             tasksList.ItemsSource = Singlton.tasks;
-            LostSave();
         }
 
         private void NewWithotVars(object sender, RoutedEventArgs e)
         {
+            LostSave();
             Singlton.tasks.Add(new Task() { type = false });
             tasksList.ItemsSource = "";
             tasksList.ItemsSource = Singlton.tasks;
-            LostSave();
         }
 
         private void Save(object sender, RoutedEventArgs e)
@@ -323,6 +323,7 @@ namespace TestCreator
 
         private void Open(object sender, RoutedEventArgs e)
         {
+            Singlton.history = new List<List<Task>>();
             var path = new Microsoft.Win32.OpenFileDialog();
             path.ShowDialog();
             SaveFolder = path.FileName;
@@ -358,6 +359,10 @@ namespace TestCreator
 
         private void LostSave()
         {
+            var a = new List<Task>();
+            foreach (var i in Singlton.tasks)
+                a.Add((Task)i.Clone());
+            Singlton.history.Add(a);
             SaveF = false;
             if (SaveFolder != null)
                 ProjName.Text = SaveFolder.Split('\\').Last().Split('.')[0] + "*";
@@ -385,7 +390,7 @@ namespace TestCreator
             {
                 if (SaveFolder != "" && SaveFolder != null)
                     SaveFile(SaveFolder);
-                else 
+                else
                 {
                     var path = new Microsoft.Win32.SaveFileDialog();
                     path.ShowDialog();
@@ -393,7 +398,13 @@ namespace TestCreator
                     SaveFile(path.FileName);
                 }
             }
-            if (e.Key == Key.RightCtrl|| e.Key == Key.LeftCtrl)
+            if (e.Key == Key.Z && ControlPress)
+            {
+                Singlton.tasks = Singlton.history.Last();
+                Singlton.history.Remove(Singlton.history.Last());
+                tasksList.ItemsSource = Singlton.tasks;
+            }
+            if (e.Key == Key.RightCtrl || e.Key == Key.LeftCtrl)
                 ControlPress = true;
         }
 

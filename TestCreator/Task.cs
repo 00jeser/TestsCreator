@@ -8,9 +8,9 @@ using Newtonsoft.Json;
 
 namespace TestCreator
 {
-    public class Task
+    public class Task : ICloneable
     {
-        public Task() 
+        public Task()
         {
             type = false;
             tasks = new string[0];
@@ -80,6 +80,10 @@ namespace TestCreator
             }
         }
 
+        public object Clone()
+        {
+            return new Task() { tasks = tasks, answ = answ, math = math, task = task + "", type = type, vars = vars };
+        }
     }
 
     public class Variable
@@ -115,4 +119,5 @@ namespace TestCreator
         {
         }
     }
+
 }
