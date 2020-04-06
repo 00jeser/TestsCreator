@@ -3,7 +3,7 @@ from random import randint
 from random import choice
 
 
-def proc_func(inp):
+def proc_func(inp):  # Функция для подбора рандомных задач и чисел при определённых условиях
     inp_changed = inp
     if not inp_changed['task']:
         inp_changed['tasks'] = choice(inp_changed['tasks'])
@@ -18,10 +18,10 @@ def proc_func(inp):
     return inp_changed
 
 
-def main_func(input_json, number_of_variants):
+def main_func(input_json, number_of_variants):  # Основная функция для вызова
     list_of_varianst = list()
     for variant in range(number_of_variants):
-        with open(input_json, 'r', encoding='utf-8') as file:
+        with open(input_json, 'r', encoding='utf-8') as file:  # Ввод осуществляется через json-файл
             data = json.load(file)
         list_of_varianst.append([])
         for i in range(len(data)):
