@@ -23,19 +23,19 @@ def main_func(input_json, number_of_variants):
     for variant in range(number_of_variants):
         with open(input_json, 'r', encoding='utf-8') as file:
             data = json.load(file)
-        list_of_varianst.append(['Вариант ' + str(variant + 1) + ':'])
+        list_of_varianst.append([])
         for i in range(len(data)):
             data_ = proc_func(data[i])
             if not data_['task']:
-                list_of_varianst[variant].append('Задача ' + str(i + 1) + ': ' + data_['tasks'])
+                list_of_varianst[variant].append(data_['tasks'])
             else:
-                list_of_varianst[variant].append('Задача ' + str(i + 1) + ': ' + data_['task'])
+                list_of_varianst[variant].append(data_['task'])
 
     # ------- Блок вывода ------- #
     list_of_output = list()
     for i_0 in range(len(list_of_varianst)):
-        for i_1 in list_of_varianst[i_0]:
-            list_of_output.append(i_1 + '\n')
-        list_of_output.append('\n')
-    return ''.join(list_of_output)
+        list_of_output.append(dict())
+        for i_1 in range(len(list_of_varianst[i_0])):
+            list_of_output[i_0]['task' + str(i_1 + 1)] = list_of_varianst[i_0][i_1]
+    return list_of_output
     # ------- Блок вывода ------- #
