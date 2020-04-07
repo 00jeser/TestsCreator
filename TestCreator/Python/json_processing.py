@@ -15,7 +15,17 @@ def proc_func(inp):  # Функция для подбора рандомных �
         else:
             perem = choice(inp_changed['variables'][i]['choice'])
         inp_changed['task'] = inp_changed['task'].replace('{' + inp_changed['variables'][i]['name'] + '}', str(perem))
+        if inp_changed['equation']:
+            inp_changed['equation'] = inp_changed['equation'].replace(inp_changed['variables'][i]['name'],
+                                                                      str(perem))  # Замена переменных в 'equation'
     return inp_changed
+
+
+def decision(inp):  # Решение задачи
+    if inp['equation']:
+        return eval(inp['equation'].split('=')[1])
+    else:
+        return None
 
 
 def main_func(input_json, number_of_variants):  # Основная функция для вызова
@@ -25,17 +35,19 @@ def main_func(input_json, number_of_variants):  # Основная функци�
             data = json.load(file)
         list_of_varianst.append([])
         for i in range(len(data)):
-            data_ = proc_func(data[i])
+            data_ = proc_func(data[i])  # вызов функции proc_func(inp)
+            data_['equation'] = decision(data_)  # вызов функции decision(inp)
             if not data_['task']:
-                list_of_varianst[variant].append(data_['tasks'])
+                list_of_varianst[variant].append([data_['tasks'], data_['equation']])
             else:
-                list_of_varianst[variant].append(data_['task'])
+                list_of_varianst[variant].append([data_['task'], data_['equation']])
 
     # ------- Блок вывода ------- #
     list_of_output = list()
     for i_0 in range(len(list_of_varianst)):
         list_of_output.append(dict())
         for i_1 in range(len(list_of_varianst[i_0])):
-            list_of_output[i_0]['task' + str(i_1 + 1)] = list_of_varianst[i_0][i_1]
+            list_of_output[i_0]['task' + str(i_1 + 1)] = list_of_varianst[i_0][i_1][0]  # Добавление задания в вывод
+            list_of_output[i_0]['answer' + str(i_1 + 1)] = list_of_varianst[i_0][i_1][1]  # Добавление ответа в вывод
     return list_of_output
     # ------- Блок вывода ------- #
