@@ -8,7 +8,7 @@
         xmlns:controls="clr-namespace:WpfMath.Controls;assembly=WpfMath"
         xmlns:clr="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="123" MinWidth="300" WindowStyle="None" WindowState="Maximized" SizeChanged="Window_SizeChanged" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp">
+        Title="123" MinWidth="600" WindowStyle="None" WindowState="Maximized" SizeChanged="Window_SizeChanged" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp">
     <WindowChrome.WindowChrome>
         <WindowChrome 
         CaptionHeight="0"
@@ -16,6 +16,9 @@
             />
     </WindowChrome.WindowChrome>
     <Window.Resources>
+        <Style TargetType="HeaderedItemsControl">
+            <Setter Property="Background" Value="Aqua"/>
+        </Style>
         <SolidColorBrush x:Key="Color1" Color="Blue"/>
         <SolidColorBrush x:Key="Color2" Color="#FF7D7DFF"/>
         <SolidColorBrush x:Key="ColorF" Color="White"/>
@@ -54,7 +57,7 @@
                         <ControlTemplate TargetType="{x:Type Button}">
                             <Border 
                             Name="Border" 
-                            CornerRadius="0" 
+                            CornerRadius="2" 
                             BorderThickness="1" 
                             Background="#00DAFFFD"
                             BorderBrush="#00DAFFFD">
@@ -273,24 +276,27 @@
                 <RowDefinition Height="90"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Grid Background="{DynamicResource Color2}" MouseDown="Grid_MouseDown" Grid.Row="0"/>
+            <Image Source="Pictures/fon.png" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Height="50"/>
+            <Grid MouseDown="Grid_MouseDown" Grid.Row="0" Background="#00000000"/>
             
-            <TabControl SelectedIndex="1" Margin="2,10,2,1" BorderBrush="{DynamicResource Color2}" Foreground="{DynamicResource ColorF}" SelectionChanged="TabControl_SelectionChanged" Background="{x:Null}">
+            <TabControl SelectedIndex="1" Margin="2,12,0.5,-1" BorderBrush="{DynamicResource Color2}" Foreground="{DynamicResource ColorF}" SelectionChanged="TabControl_SelectionChanged" Background="{x:Null}" VerticalContentAlignment="Stretch">
                 <TabControl.Resources>
                     <Style TargetType="TabItem">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="TabItem">
-                                    <Border Name="Border" BorderThickness="0" BorderBrush="{DynamicResource Color2}" Margin="1,0,0,-3" Background="White" MouseUp="Border_MouseUp">
+                                    <Grid Name="Border"  Margin="1,0,0,-3.5" Background="#FF8D8DFF" MouseUp="Border_MouseUp">
                                         <ContentPresenter x:Name="ContentSite"
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Stretch"
+                                            HorizontalAlignment="Stretch"
                                             ContentSource="Header"
-                                            Margin="10,2"/>
-                                    </Border>
+                                            Margin="8,0,10,0" OpacityMask="Red" Panel.ZIndex="1">
+                                        </ContentPresenter>
+                                    </Grid>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsSelected" Value="True">
                                             <Setter TargetName="Border" Property="Background" Value="White"/>
+                                            <!--<Setter TargetName="ContentSite" Property="Margin" Value="10, 2"/>-->
                                             <Setter Property="Foreground" Value="Black"/>
                                         </Trigger>
                                         <Trigger Property="IsSelected" Value="False">
@@ -303,8 +309,8 @@
                         </Setter>
                     </Style>
                 </TabControl.Resources>
-                <TabItem Header="Файл" BorderBrush="{x:Null}" Background="Black" Padding="0">
-                    <Grid x:Name="g1" Background="White" Margin="0">
+                <TabItem FontSize="14" Header="Файл" BorderBrush="{x:Null}" Padding="0">
+                    <Grid x:Name="g1" Background="White">
                         <WrapPanel Margin="0,0,40,0">
                             <Button Style="{DynamicResource MenuButton}" Click="Save">
                                 <Grid>
@@ -348,8 +354,8 @@
                         </Button>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Главная" BorderBrush="{x:Null}" Background="{x:Null}">
-                    <Grid Margin="0" x:Name="g2" Background="White">
+                <TabItem FontSize="14" Header="Главная" BorderBrush="{x:Null}" Background="{x:Null}">
+                    <Grid x:Name="g2" Background="White">
                         <WrapPanel>
                             <Button Style="{DynamicResource MenuButton}" Click="NewWithotVars">
                                 <Grid>
@@ -363,7 +369,7 @@
                                     <TextBlock Text="Новая задача с переменными" VerticalAlignment="Bottom" Margin="0,0,0,-2"/>
                                 </Grid>
                             </Button>
-                            <Rectangle Width="10"/>
+                            <Border Width="20" BorderBrush="White" Background="#FFECECEC" BorderThickness="5,1" Padding="0" Margin="0,1,0,0"/>
                             <Button x:Name="EditButton" IsEnabled="False" Style="{DynamicResource MenuButton}" Click="EditItem">
                                 <Grid>
                                     <Image Margin="0,0,0,10" Source="Pictures/edit.png"/>
@@ -379,8 +385,11 @@
                         </WrapPanel>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Экспорт" BorderBrush="{x:Null}" Background="White">
-                    <Grid x:Name="g3" Margin="0" Background="White">
+                <TabItem FontSize="14" BorderBrush="{x:Null}">
+                    <TabItem.Header>
+                        <TextBlock Text="Экспорт"/>
+                    </TabItem.Header>
+                    <Grid x:Name="g3" Background="White">
                         <WrapPanel>
                             <Button Style="{DynamicResource MenuButton}" Click="Button_Click">
                                 <Grid>
@@ -393,30 +402,32 @@
                 </TabItem>
             </TabControl>
 
-            <Button Grid.Row="0" HorizontalAlignment="Right" Height="32" VerticalAlignment="Top" Width="40" Margin="0" Click="close" Style="{DynamicResource clsBtn}" IsEnabled="{Binding someSelect}">
+            <Button Grid.Row="0" HorizontalAlignment="Right" Height="32" VerticalAlignment="Top" Width="50" Margin="0" Click="close" Style="{DynamicResource clsBtn}" IsEnabled="{Binding someSelect}">
                 <Image Source="Pictures/close.png" Margin="7"/>
             </Button>
-            <Button Grid.Row="0" HorizontalAlignment="Right" Height="32" VerticalAlignment="Top" Width="40" Margin="0,0,40,0" Click="maximize" Style="{DynamicResource minMaxBtn}">
+            <Button Grid.Row="0" HorizontalAlignment="Right" Height="32" VerticalAlignment="Top" Width="50" Margin="0,0,50,0" Click="maximize" Style="{DynamicResource minMaxBtn}">
                 <Image Source="Pictures/max.png" Margin="7"/>
             </Button>
-            <Button Grid.Row="0" HorizontalAlignment="Right" Height="32" VerticalAlignment="Top" Width="40" Margin="0,0,80,0" Click="minimize" Style="{DynamicResource minMaxBtn}">
+            <Button Grid.Row="0" HorizontalAlignment="Right" Height="32" VerticalAlignment="Top" Width="50" Margin="0,0,100,0" Click="minimize" Style="{DynamicResource minMaxBtn}">
                 <Image Source="Pictures/min.png" Margin="7"/>
             </Button>
 
             <TextBlock x:Name="ProjName" TextAlignment="Center" Margin="0,10,0,0" Height="32" VerticalAlignment="Top" Text="Новый тест" Foreground="{DynamicResource ColorF}" HorizontalAlignment="Center"/>
 
-            <Grid MouseDown="Grid_MouseDown" Grid.Row="0" Margin="185,0,120,60" Background="#00000000" DragOver="Grid_DragEnter"/>
+            <Grid MouseDown="Grid_MouseDown" Grid.Row="0" Margin="185,0,150,60" Background="#00000000" DragOver="Grid_DragEnter"/>
             
             <ListBox MouseDoubleClick="tasksList_MouseDoubleClick" x:Name="tasksList" SelectionChanged="tasksList_SelectionChanged" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Background="White" BorderBrush="{x:Null}" Grid.IsSharedSizeScope="True" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="1">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Border BorderThickness="3" CornerRadius="0,0,1,1" BorderBrush="{DynamicResource Color1}" Margin="-3,3" Background="{x:Null}">
+                        <Border BorderThickness="4,8,4,4" CornerRadius="0,0,5,5" BorderBrush="{DynamicResource Color1}" Margin="0,6" Background="White">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" Opacity="0.3" ShadowDepth="10"/>
+                            </Border.Effect>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <Rectangle Fill="{DynamicResource Color1}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="8"/>
                                 <TextBlock FontSize="{DynamicResource FontSize}" Text="{Binding Path=Info}" VerticalAlignment="Stretch" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Visible" TextWrapping="Wrap" Margin="3,10,3,10" Foreground="Black"/>
                             </Grid>
                         </Border>

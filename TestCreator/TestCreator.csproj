@@ -184,6 +184,7 @@
     <Resource Include="Pictures\edit.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Pictures\fon.png" />
     <Content Include="Python\json_processing.py" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
