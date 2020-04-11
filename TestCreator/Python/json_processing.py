@@ -31,8 +31,7 @@ def decision(inp):  # Решение задачи
 def main_func(input_json, number_of_variants):  # Основная функция для вызова
     list_of_varianst = list()
     for variant in range(number_of_variants):
-        with open(input_json, 'r', encoding='utf-8') as file:  # Ввод осуществляется через json-файл
-            data = json.load(file)
+        data = json.loads(input_json)
         list_of_varianst.append([])
         for i in range(len(data)):
             data_ = proc_func(data[i])  # вызов функции proc_func(inp)
@@ -49,5 +48,6 @@ def main_func(input_json, number_of_variants):  # Основная функци�
         for i_1 in range(len(list_of_varianst[i_0])):
             list_of_output[i_0]['task' + str(i_1 + 1)] = list_of_varianst[i_0][i_1][0]  # Добавление задания в вывод
             list_of_output[i_0]['answer' + str(i_1 + 1)] = list_of_varianst[i_0][i_1][1]  # Добавление ответа в вывод
+    list_of_output = json.dumps(list_of_output)
     return list_of_output
     # ------- Блок вывода ------- #
