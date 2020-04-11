@@ -29,7 +29,7 @@ namespace TestCreator
     {
 
         public bool someSelect = false;
-        public string SaveFolder;
+        public string SaveFolder = "";
         public bool SaveF = true;
 
         public MainWindow()
@@ -163,6 +163,7 @@ namespace TestCreator
                     VisualVars ii = (i as VisualVars);
                     Variable v = new Variable();
                     v.Name = ii.Name;
+                    if (ii.Value == null) ii.Value = "";
                     if (ii.Value.IndexOf(';') != -1)
                     {
                         v.lst = ii.Value.Split(';').Select(s => s.Trim()).ToArray();
@@ -310,7 +311,7 @@ namespace TestCreator
         {
             SaveF = true;
             ProjName.Text = s.Split('\\').Last().Split('.')[0];
-            File.WriteAllText(s, JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented));
+            File.WriteAllText(s, JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented), Encoding.UTF8);
         }
 
         private void NewFile(object sender, RoutedEventArgs e)
@@ -412,6 +413,17 @@ namespace TestCreator
         {
             if (e.Key == Key.RightCtrl || e.Key == Key.LeftCtrl)
                 ControlPress = false;
+        }
+
+        private void Export(object sender, RoutedEventArgs e)
+        {
+            ScriptEngine engine = Python.CreateEngine();
+            ScriptScope scope = engine.CreateScope();
+            engine.SetSearchPaths(new[] { "Python/lib" });
+            engine.ExecuteFile("Python/json_processing.py", scope);
+            dynamic function = scope.GetVariable("main_func"); 
+            dynamic result = function(JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented), 5);
+            Debug.Write(result);
         }
     }
 }
