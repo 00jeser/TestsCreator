@@ -6,7 +6,9 @@ from random import choice
 def proc_func(inp):  # Function for selecting random problems and numbers under certain conditions
     inp_changed = inp
     if not inp_changed['task']:
-        inp_changed['tasks'] = choice(inp_changed['tasks'])
+        rand_num = randint(1, len(inp_changed['tasks'])) - 1
+        inp_changed['tasks'] = inp_changed['tasks'][rand_num]
+        inp_changed['answers'] = inp_changed['answers'][rand_num]
         return inp_changed
     for i in range(len(inp_changed['variables'])):
         if inp_changed['variables'][i]['range']:
@@ -25,7 +27,7 @@ def decision(inp):  # Problem solution
     if inp['equation']:
         return eval(inp['equation'].split('=')[1])
     else:
-        return None
+        return inp['answers']
 
 
 def main_func(input_json, number_of_variants):  # Main function for calling
