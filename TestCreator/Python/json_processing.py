@@ -44,11 +44,11 @@ def main_func(input_json, number_of_variants):  # Main function for calling
     # ------- Output block ------- #
     list_of_output = list()
     for i_0 in range(len(list_of_varianst)):
-        list_of_output.append(dict())
+        list_of_output.append(list())
         for i_1 in range(len(list_of_varianst[i_0])):
-            list_of_output[i_0]['task' + str(i_1 + 1)] = list_of_varianst[i_0][i_1][0]  # Adding a response to input
-            list_of_output[i_0]['answer' + str(i_1 + 1)] = list_of_varianst[i_0][i_1][1]  # Adding a response to output
+            list_of_output[i_0].append(dict())
+            list_of_output[i_0][i_1]['task'] = list_of_varianst[i_0][i_1][0]  # Adding a response to input
+            list_of_output[i_0][i_1]['answer'] = list_of_varianst[i_0][i_1][1]  # Adding a response to output
     list_of_output = json.dumps(list_of_output)
     return list_of_output
     # ------- Output block ------- #
-
