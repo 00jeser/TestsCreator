@@ -447,13 +447,24 @@ namespace TestCreator
                         result += rezultedTasks[v - 1][n - 1].task;
                         result += "\n";
                     }
-                    if (xcCounter == xcSelect.SelectedIndex+1)
+                    if ((xcCounter == xcSelect.SelectedIndex+1) || (v == rezultedTasks.Count))
                     {
                         xcCounter = 0;
                         result += "\xc";
                     }
                     else
                     {
+                        result += "\n";
+                    }
+                }
+                result += "Ответы\n";
+                for (int v = 1; v <= rezultedTasks.Count; v++)
+                {
+                    result += $"Вариант {v}\n";
+                    for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
+                    {
+                        result += n + ". ";
+                        result += rezultedTasks[v - 1][n - 1].answer;
                         result += "\n";
                     }
                 }
