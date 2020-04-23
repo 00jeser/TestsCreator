@@ -428,10 +428,10 @@ namespace TestCreator
                 engine.SetSearchPaths(new[] { "Python/lib" });
                 engine.ExecuteFile("Python/json_processing.py", scope);
                 dynamic function = scope.GetVariable("main_func");
-                dynamic result = function(JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented), 5);
+                dynamic result = function(JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented), int.Parse(VarAmoInp.Text));
                 result = System.Text.RegularExpressions.Regex.Unescape(result);
 
-                result = File.ReadAllText("F:\\txt.txt");
+                //result = File.ReadAllText("F:\\txt.txt");
                 List<List<rezultedTask>> rezultedTasks = JsonConvert.DeserializeObject<List<List<rezultedTask>>>(result);
                 result = "";
 
