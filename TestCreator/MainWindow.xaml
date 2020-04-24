@@ -3,10 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TestCreator"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:controls="clr-namespace:WpfMath.Controls;assembly=WpfMath"
-        xmlns:clr="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="123" MinWidth="600" WindowStyle="None" WindowState="Maximized" SizeChanged="Window_SizeChanged" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp">
     <WindowChrome.WindowChrome>
@@ -397,6 +394,25 @@
                                     <TextBlock Text="Экспорт в word" VerticalAlignment="Bottom" Margin="0,0,0,-2"/>
                                 </Grid>
                             </Button>
+                            <Grid Width="20"/>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Text="ставить разрыв страницы каждые" Margin="0,0,40,0" VerticalAlignment="Center"/>
+                                <ComboBox Name="xcSelect" Grid.Row="0" Width="35" HorizontalAlignment="Right" Margin="2">
+                                    <ComboBoxItem>1</ComboBoxItem>
+                                    <ComboBoxItem>2</ComboBoxItem>
+                                    <ComboBoxItem>3</ComboBoxItem>
+                                    <ComboBoxItem>4</ComboBoxItem>
+                                    <ComboBoxItem>5</ComboBoxItem>
+                                    <ComboBoxItem>6</ComboBoxItem>
+                                    <ComboBoxItem>7</ComboBoxItem>
+                                </ComboBox>
+                                <TextBlock Grid.Row="1" Text="Количество вариантов" Margin="0,0,40,0" VerticalAlignment="Center"/>
+                                <TextBox x:Name="VarAmoInp" Grid.Row="1" Width="100" HorizontalAlignment="Right" Margin="2"/>
+                            </Grid>
                         </WrapPanel>
                     </Grid>
                 </TabItem>

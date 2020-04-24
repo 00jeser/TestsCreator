@@ -19,6 +19,10 @@ using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using TestCreator.Properties;
 using System.Diagnostics;
+using Word = Microsoft.Office.Interop.Word;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace TestCreator
 {
@@ -417,13 +421,65 @@ namespace TestCreator
 
         private void Export(object sender, RoutedEventArgs e)
         {
-            ScriptEngine engine = Python.CreateEngine();
-            ScriptScope scope = engine.CreateScope();
-            engine.SetSearchPaths(new[] { "Python/lib" });
-            engine.ExecuteFile("Python/json_processing.py", scope);
-            dynamic function = scope.GetVariable("main_func"); 
-            dynamic result = function(JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented), 5);
-            Debug.Write(result);
+            try
+            {
+                ScriptEngine engine = Python.CreateEngine();
+                ScriptScope scope = engine.CreateScope();
+                engine.SetSearchPaths(new[] { "Python/lib" });
+                engine.ExecuteFile("Python/json_processing.py", scope);
+                dynamic function = scope.GetVariable("main_func");
+                dynamic result = function(JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented), int.Parse(VarAmoInp.Text));
+                result = System.Text.RegularExpressions.Regex.Unescape(result);
+
+                //result = File.ReadAllText("F:\\txt.txt");
+                List<List<rezultedTask>> rezultedTasks = JsonConvert.DeserializeObject<List<List<rezultedTask>>>(result);
+                result = "";
+
+                int xcCounter = 0;
+                //foreach (var variant in rezultedTasks)
+                for (int v = 1; v <= rezultedTasks.Count; v++)
+                {
+                    xcCounter += 1;
+                    result += $"Вариант {v}\n";
+                    for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
+                    {
+                        result += n + ". ";
+                        result += rezultedTasks[v - 1][n - 1].task;
+                        result += "\n";
+                    }
+                    if ((xcCounter == xcSelect.SelectedIndex+1) || (v == rezultedTasks.Count))
+                    {
+                        xcCounter = 0;
+                        result += "\xc";
+                    }
+                    else
+                    {
+                        result += "\n";
+                    }
+                }
+                result += "Ответы\n";
+                for (int v = 1; v <= rezultedTasks.Count; v++)
+                {
+                    result += $"Вариант {v}\n";
+                    for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
+                    {
+                        result += n + ". ";
+                        result += rezultedTasks[v - 1][n - 1].answer;
+                        result += "\n";
+                    }
+                }
+
+                var app = new Word.Application();
+                var doc = app.Documents.Add();
+                var r = doc.Range();
+                r.Text = result;
+                app.Visible = true;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

@@ -27,8 +27,8 @@ namespace TestCreator
         private string[] tasks;
         [JsonIgnore]
         public List<string> Tasks { get { return new List<string>(tasks); } set { tasks = value.ToArray(); } }
+        
         [JsonProperty("answers")]
-
         private string[] answ;
         [JsonIgnore]
         public List<string> Answ { get { return new List<string>(answ); } set { answ = value.ToArray(); } }
@@ -119,5 +119,9 @@ namespace TestCreator
         {
         }
     }
-
+    public class rezultedTask 
+    {
+        public string task { get; set; }
+        public string answer { get; set; }
+    }
 }
