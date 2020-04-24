@@ -1,6 +1,7 @@
 import json
 from random import randint
 from random import choice
+from math import sqrt
 
 
 def proc_func(inp):  # Function for selecting random problems and numbers under certain conditions
@@ -25,6 +26,9 @@ def proc_func(inp):  # Function for selecting random problems and numbers under 
 
 def decision(inp):  # Problem solution
     if inp['equation']:
+        inp['equation'] = inp['equation'].replace(':', '/')
+        inp['equation'] = inp['equation'].replace('√', 'sqrt')
+        inp['equation'] = inp['equation'].replace('^', '**')
         return eval(inp['equation'].split('=')[1])
     else:
         return inp['answers']
