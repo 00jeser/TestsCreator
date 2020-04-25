@@ -27,7 +27,6 @@ def proc_func(inp):  # Function for selecting random problems and numbers under 
 def decision(inp):  # Problem solution
     if inp['equation']:
         inp['equation'] = inp['equation'].replace(':', '/')
-        inp['equation'] = inp['equation'].replace('√', 'sqrt')
         inp['equation'] = inp['equation'].replace('^', '**')
         return eval(inp['equation'].split('=')[1])
     else:
