@@ -103,7 +103,8 @@ namespace TestCreator
         {
             try
             {
-                tasksList.Focus();
+                if (tasksList != null)
+                    tasksList.Focus();
             }
             catch (Exception)
             {
@@ -447,7 +448,7 @@ namespace TestCreator
                         result += rezultedTasks[v - 1][n - 1].task;
                         result += "\n";
                     }
-                    if ((xcCounter == xcSelect.SelectedIndex+1) || (v == rezultedTasks.Count))
+                    if ((xcCounter == xcSelect.SelectedIndex + 1) || (v == rezultedTasks.Count))
                     {
                         xcCounter = 0;
                         result += "\xc";
