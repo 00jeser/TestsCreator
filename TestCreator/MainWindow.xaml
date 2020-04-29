@@ -306,7 +306,12 @@
                         </Setter>
                     </Style>
                 </TabControl.Resources>
-                <TabItem FontSize="15" Header="Файл" BorderBrush="{x:Null}" Padding="0">
+                <TabItem FontSize="15" BorderBrush="{x:Null}" Padding="0">
+                    <TabItem.Header>
+                        <Grid Background="#00000000" Margin="-8,0">
+                            <TextBlock Text="Файл" Margin="8,0"/>
+                        </Grid>
+                    </TabItem.Header>
                     <Grid x:Name="g1" Background="White">
                         <WrapPanel Margin="0,0,40,0">
                             <Button Style="{DynamicResource MenuButton}" Click="Save">
@@ -351,7 +356,12 @@
                         </Button>
                     </Grid>
                 </TabItem>
-                <TabItem FontSize="15" Header="Главная" BorderBrush="{x:Null}" Background="{x:Null}">
+                <TabItem FontSize="15" BorderBrush="{x:Null}" Background="{x:Null}">
+                    <TabItem.Header>
+                        <Grid Background="#00000000" Margin="-8,0">
+                            <TextBlock Text="Главная" Margin="8,0"/>
+                        </Grid>
+                    </TabItem.Header>
                     <Grid x:Name="g2" Background="White">
                         <WrapPanel>
                             <Button Style="{DynamicResource MenuButton}" Click="NewWithotVars">
@@ -384,7 +394,9 @@
                 </TabItem>
                 <TabItem FontSize="15" BorderBrush="{x:Null}">
                     <TabItem.Header>
-                        <TextBlock Text="Экспорт"/>
+                        <Grid Background="#00000000" Margin="-8,0">
+                            <TextBlock Text="Экспорт" Margin="8,0"/>
+                        </Grid>
                     </TabItem.Header>
                     <Grid x:Name="g3" Background="White">
                         <WrapPanel>
