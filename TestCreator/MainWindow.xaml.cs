@@ -101,26 +101,15 @@ namespace TestCreator
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
-            {
-                if (tasksList != null)
-                    tasksList.Focus();
-            }
-            catch (Exception)
-            {
-
-            }
+           
         }
 
         private void focusList(object sender, RoutedEventArgs e)
         {
-            if (sender != sett)
-                tasksList.Focus();
         }
 
         private void Border_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            tasksList.Focus();
         }
 
         private void EditItem(object sender, RoutedEventArgs e)
@@ -188,7 +177,6 @@ namespace TestCreator
             tasksList.ItemsSource = Singlton.tasks;
             Edit1Grid.Visibility = Visibility.Hidden;
             EditSomeGrid.Visibility = Visibility.Hidden;
-            tasksList.Focus();
         }
         private void ESTEnd(object sender, RoutedEventArgs e)
         {
@@ -208,7 +196,6 @@ namespace TestCreator
             tasksList.ItemsSource = Singlton.tasks;
             Edit1Grid.Visibility = Visibility.Hidden;
             EditSomeGrid.Visibility = Visibility.Hidden;
-            tasksList.Focus();
         }
 
         private void E1TText_TextChanged(object sender, TextChangedEventArgs e)
@@ -381,11 +368,6 @@ namespace TestCreator
             this.WindowState = WindowState.Normal;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            WordExport export = new WordExport();
-            export.Show();
-        }
 
         bool ControlPress = false;
         private void Window_KeyDown(object sender, KeyEventArgs e)
