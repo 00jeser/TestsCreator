@@ -28,6 +28,7 @@ def decision(inp):  # Problem solution
     if inp['equation']:
         inp['equation'] = inp['equation'].replace(':', '/')
         inp['equation'] = inp['equation'].replace('^', '**')
+        inp['equation'] = inp['equation'].replace('√', 'sqrt')
         return eval(inp['equation'].split('=')[1])
     else:
         return inp['answers']
