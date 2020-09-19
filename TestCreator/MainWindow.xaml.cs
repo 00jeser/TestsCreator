@@ -334,7 +334,15 @@ namespace TestCreator
 
         private void maximize(object sender, RoutedEventArgs e)
         {
-            this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+            if (this.WindowState == WindowState.Maximized)
+                this.WindowState = WindowState.Normal;
+            else 
+            {
+                this.WindowStyle = WindowStyle.SingleBorderWindow;
+                this.WindowState = WindowState.Maximized;
+                this.WindowStyle = WindowStyle.None;
+            }
+            //this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
         }
 
         private void minimize(object sender, RoutedEventArgs e)
