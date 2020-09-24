@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="123" MinWidth="600" WindowStyle="None" WindowState="Maximized" SizeChanged="Window_SizeChanged" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp">
+        Title="123" MinWidth="600" WindowStyle="None" SizeChanged="Window_SizeChanged" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp">
     <WindowChrome.WindowChrome>
-        <WindowChrome 
+        <WindowChrome
         CaptionHeight="0"
         ResizeBorderThickness="5"
             />
@@ -450,6 +450,12 @@
                                 <Grid>
                                     <Image Margin="0,0,0,13" Source="Pictures/Export.png"/>
                                     <TextBlock Text="Экспорт в word" VerticalAlignment="Bottom" Margin="0,0,0,-2"/>
+                                </Grid>
+                            </Button>
+                            <Button Style="{DynamicResource MenuButton}" Click="ExportTxt">
+                                <Grid>
+                                    <Image Margin="0,0,0,13" Source="Pictures/Export.png"/>
+                                    <TextBlock Text="Экспорт в txt" VerticalAlignment="Bottom" Margin="0,0,0,-2"/>
                                 </Grid>
                             </Button>
                             <Grid Width="20"/>
