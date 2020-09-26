@@ -35,8 +35,8 @@ def decision(inp):  # Problem solution
         inp['equation'] = inp['equation'].split('=')[1]
         inp['equation'] = inp['equation'].replace('vector{', '')
         inp['equation'] = inp['equation'][:-1]
-        return '{' + str(eval(inp['equation'].split('; ')[0])) + '; ' + str(
-            eval(inp['equation'].split('; ')[1])) + '; ' + str(eval(inp['equation'].split('; ')[2])) + '}'
+        return '{' + str(eval(inp['equation'].split(';')[0])) + '; ' + str(
+            eval(inp['equation'].split(';')[1])) + '; ' + str(eval(inp['equation'].split(';')[2])) + '}'
     else:
         return inp['answers']
 
