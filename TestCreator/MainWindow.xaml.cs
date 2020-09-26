@@ -23,6 +23,7 @@ using Word = Microsoft.Office.Interop.Word;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using Microsoft.Scripting.Runtime;
 
 namespace TestCreator
 {
@@ -36,8 +37,14 @@ namespace TestCreator
         public string SaveFolder = "";
         public bool SaveF = true;
 
+
+        ScriptEngine engine = Python.CreateEngine();
+        ScriptScope scope;
         public MainWindow()
         {
+            scope = engine.CreateScope();
+            engine.SetSearchPaths(new[] { "Python/lib" });
+            engine.ExecuteFile("Python/json_processing.py", scope);
             InitializeComponent();
             var s = Environment.OSVersion.Version.Minor;
             if (Environment.OSVersion.Version.Minor == 1)
@@ -101,26 +108,15 @@ namespace TestCreator
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
-            {
-                if (tasksList != null)
-                    tasksList.Focus();
-            }
-            catch (Exception)
-            {
-
-            }
+           
         }
 
         private void focusList(object sender, RoutedEventArgs e)
         {
-            if (sender != sett)
-                tasksList.Focus();
         }
 
         private void Border_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            tasksList.Focus();
         }
 
         private void EditItem(object sender, RoutedEventArgs e)
@@ -188,7 +184,6 @@ namespace TestCreator
             tasksList.ItemsSource = Singlton.tasks;
             Edit1Grid.Visibility = Visibility.Hidden;
             EditSomeGrid.Visibility = Visibility.Hidden;
-            tasksList.Focus();
         }
         private void ESTEnd(object sender, RoutedEventArgs e)
         {
@@ -208,7 +203,6 @@ namespace TestCreator
             tasksList.ItemsSource = Singlton.tasks;
             Edit1Grid.Visibility = Visibility.Hidden;
             EditSomeGrid.Visibility = Visibility.Hidden;
-            tasksList.Focus();
         }
 
         private void E1TText_TextChanged(object sender, TextChangedEventArgs e)
@@ -347,7 +341,15 @@ namespace TestCreator
 
         private void maximize(object sender, RoutedEventArgs e)
         {
-            this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+            if (this.WindowState == WindowState.Maximized)
+                this.WindowState = WindowState.Normal;
+            else 
+            {
+                this.WindowStyle = WindowStyle.SingleBorderWindow;
+                this.WindowState = WindowState.Maximized;
+                this.WindowStyle = WindowStyle.None;
+            }
+            //this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
         }
 
         private void minimize(object sender, RoutedEventArgs e)
@@ -381,11 +383,6 @@ namespace TestCreator
             this.WindowState = WindowState.Normal;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            WordExport export = new WordExport();
-            export.Show();
-        }
 
         bool ControlPress = false;
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -424,10 +421,6 @@ namespace TestCreator
         {
             try
             {
-                ScriptEngine engine = Python.CreateEngine();
-                ScriptScope scope = engine.CreateScope();
-                engine.SetSearchPaths(new[] { "Python/lib" });
-                engine.ExecuteFile("Python/json_processing.py", scope);
                 dynamic function = scope.GetVariable("main_func");
                 dynamic result = function(JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented), int.Parse(VarAmoInp.Text));
                 result = System.Text.RegularExpressions.Regex.Unescape(result);
@@ -475,12 +468,71 @@ namespace TestCreator
                 var r = doc.Range();
                 r.Text = result;
                 app.Visible = true;
+                app.GoForward();
+                app.PutFocusInMailHeader();
+                //minimize(null, null);
 
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private async void ExportTxt(object sender, RoutedEventArgs e)
+        {
+                dynamic function = scope.GetVariable("main_func");
+                dynamic result = function(JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented), int.Parse(VarAmoInp.Text));
+                result = System.Text.RegularExpressions.Regex.Unescape(result);
+
+                //result = File.ReadAllText("F:\\txt.txt");
+                List<List<rezultedTask>> rezultedTasks = JsonConvert.DeserializeObject<List<List<rezultedTask>>>(result);
+                result = "";
+
+                int xcCounter = 0;
+                //foreach (var variant in rezultedTasks)
+                for (int v = 1; v <= rezultedTasks.Count; v++)
+                {
+                    xcCounter += 1;
+                    result += $"Вариант {v}\n";
+                    for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
+                    {
+                        result += n + ". ";
+                        result += rezultedTasks[v - 1][n - 1].task;
+                        result += "\n";
+                    }
+                    if ((xcCounter == xcSelect.SelectedIndex + 1) || (v == rezultedTasks.Count))
+                    {
+                        xcCounter = 0;
+                        result += "\xc";
+                    }
+                    else
+                    {
+                        result += "\n";
+                    }
+                }
+                result += "Ответы\n";
+                for (int v = 1; v <= rezultedTasks.Count; v++)
+                {
+                    result += $"Вариант {v}\n";
+                    for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
+                    {
+                        result += n + ". ";
+                        result += rezultedTasks[v - 1][n - 1].answer;
+                        result += "\n";
+                    }
+                }
+
+                var path = System.Environment.GetEnvironmentVariable("TEMP") + "\\\\" + DateTime.Now.ToString().Replace(':', '.') + ".txt";
+                using (StreamWriter sw = new StreamWriter(path, false, Encoding.UTF8))
+                {
+                    sw.Write(result);
+                }
+                Process process = new Process();
+                process.StartInfo.FileName = "notepad.exe";
+                process.StartInfo.Arguments = '\"' + path + '\"';
+                process.Start();
+
         }
     }
 }
