@@ -26,10 +26,17 @@ def proc_func(inp):  # Function for selecting random problems and numbers under 
 
 def decision(inp):  # Problem solution
     if inp['equation']:
-        inp['equation'] = inp['equation'].replace(':', '/')
-        inp['equation'] = inp['equation'].replace('^', '**')
-        inp['equation'] = inp['equation'].replace('√', 'sqrt')
-        return eval(inp['equation'].split('=')[1])
+        if 'vector{' not in inp['equation']:
+            inp['equation'] = inp['equation'].replace(':', '/')
+            inp['equation'] = inp['equation'].replace('^', '**')
+            inp['equation'] = inp['equation'].replace('√', 'sqrt')
+            return eval(inp['equation'].split('=')[1])
+    if inp['equation'] and 'vector{' in inp['equation']:
+        inp['equation'] = inp['equation'].split('=')[1]
+        inp['equation'] = inp['equation'].replace('vector{', '')
+        inp['equation'] = inp['equation'][:-1]
+        return '{' + str(eval(inp['equation'].split('; ')[0])) + '; ' + str(
+            eval(inp['equation'].split('; ')[1])) + '; ' + str(eval(inp['equation'].split('; ')[2])) + '}'
     else:
         return inp['answers']
 
