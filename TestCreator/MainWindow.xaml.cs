@@ -5,25 +5,15 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Newtonsoft.Json;
-using System.Collections.ObjectModel;
 using TestCreator.Properties;
 using System.Diagnostics;
 using Word = Microsoft.Office.Interop.Word;
-using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Globalization;
-using Microsoft.Scripting.Runtime;
 
 namespace TestCreator
 {
@@ -108,7 +98,7 @@ namespace TestCreator
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-           
+
         }
 
         private void focusList(object sender, RoutedEventArgs e)
@@ -262,7 +252,7 @@ namespace TestCreator
         private void NewWithVars(object sender, RoutedEventArgs e)
         {
             LostSave();
-            Singlton.tasks.Add(new Task() { type = true });
+            Singlton.tasks.Add(new Task() { type = true, math = "Ответ=" });
             tasksList.ItemsSource = "";
             tasksList.ItemsSource = Singlton.tasks;
         }
@@ -343,7 +333,7 @@ namespace TestCreator
         {
             if (this.WindowState == WindowState.Maximized)
                 this.WindowState = WindowState.Normal;
-            else 
+            else
             {
                 this.WindowStyle = WindowStyle.SingleBorderWindow;
                 this.WindowState = WindowState.Maximized;
@@ -423,7 +413,7 @@ namespace TestCreator
             {
                 dynamic function = scope.GetVariable("main_func");
                 dynamic result = function(JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented), int.Parse(VarAmoInp.Text));
-                result = System.Text.RegularExpressions.Regex.Unescape(result);
+                result = Regex.Unescape(result);
 
                 //result = File.ReadAllText("F:\\txt.txt");
                 List<List<rezultedTask>> rezultedTasks = JsonConvert.DeserializeObject<List<List<rezultedTask>>>(result);
@@ -457,9 +447,12 @@ namespace TestCreator
                     result += $"Вариант {v}\n";
                     for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
                     {
-                        result += n + ". ";
-                        result += rezultedTasks[v - 1][n - 1].answer;
-                        result += "\n";
+                        if (!string.IsNullOrEmpty(rezultedTasks[v - 1][n - 1].answer))
+                        {
+                            result += n + ". ";
+                            result += rezultedTasks[v - 1][n - 1].answer;
+                            result += "\n";
+                        }
                     }
                 }
 
@@ -481,6 +474,8 @@ namespace TestCreator
 
         private async void ExportTxt(object sender, RoutedEventArgs e)
         {
+            try
+            {
                 dynamic function = scope.GetVariable("main_func");
                 dynamic result = function(JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented), int.Parse(VarAmoInp.Text));
                 result = System.Text.RegularExpressions.Regex.Unescape(result);
@@ -517,9 +512,12 @@ namespace TestCreator
                     result += $"Вариант {v}\n";
                     for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
                     {
-                        result += n + ". ";
-                        result += rezultedTasks[v - 1][n - 1].answer;
-                        result += "\n";
+                        if (!string.IsNullOrEmpty(rezultedTasks[v - 1][n - 1].answer))
+                        {
+                            result += n + ". ";
+                            result += rezultedTasks[v - 1][n - 1].answer;
+                            result += "\n";
+                        }
                     }
                 }
 
@@ -532,7 +530,38 @@ namespace TestCreator
                 process.StartInfo.FileName = "notepad.exe";
                 process.StartInfo.Arguments = '\"' + path + '\"';
                 process.Start();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
 
+        private void CharEqAddButtonClick(object sender, RoutedEventArgs e)
+        {
+            int car = E1TFormula.CaretIndex;
+            if (E1TFormula.CaretIndex == 0)
+                E1TFormula.Text = E1TFormula.Text + (sender as Button).Content.ToString();
+            else
+                E1TFormula.Text = E1TFormula.Text.Insert(E1TFormula.CaretIndex, (sender as Button).Content.ToString());
+            E1TFormula.Focus();
+            if ((sender as Button).Content.ToString().Last() == ')')
+                E1TFormula.CaretIndex = car + ((sender as Button).Content.ToString().Length - 1);
+            else
+                E1TFormula.CaretIndex = car + (sender as Button).Content.ToString().Length;
+        }
+        private void CharTxtAddButtonClick(object sender, RoutedEventArgs e)
+        {
+            int car = E1TText.CaretIndex;
+            if (E1TText.CaretIndex == 0)
+                E1TText.Text = E1TText.Text + (sender as Button).Content.ToString();
+            else
+                E1TText.Text = E1TText.Text.Insert(E1TText.CaretIndex, (sender as Button).Content.ToString());
+            E1TText.Focus();
+            if ((sender as Button).Content.ToString().Last() == ')')
+                E1TText.CaretIndex = car + ((sender as Button).Content.ToString().Length - 1);
+            else
+                E1TText.CaretIndex = car + (sender as Button).Content.ToString().Length;
         }
     }
 }
