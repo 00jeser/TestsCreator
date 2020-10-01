@@ -43,7 +43,7 @@ namespace TestCreator
                 g2.Margin = new Thickness(-2);
                 g3.Margin = new Thickness(-2);
             }
-            ProjName.Text = s.ToString();
+            //ProjName.Text = s.ToString();
 
             tasksList.ItemsSource = Singlton.tasks;
             Singlton.StyleChanged += Singlton_StyleChanged;
@@ -272,7 +272,12 @@ namespace TestCreator
                 try
                 {
                     var path = new Microsoft.Win32.SaveFileDialog();
+                    path.Filter = ".test||.test";
                     path.ShowDialog();
+                    if (string.IsNullOrEmpty(path.FileName)) 
+                    {
+                        return;
+                    }
                     SaveFolder = path.FileName;
                     SaveFile(path.FileName);
                 }
@@ -386,7 +391,12 @@ namespace TestCreator
                 else
                 {
                     var path = new Microsoft.Win32.SaveFileDialog();
+                    path.Filter = "txt files (*.test)|*.test";
                     path.ShowDialog();
+                    if (string.IsNullOrEmpty(path.FileName))
+                    {
+                        return;
+                    }
                     SaveFolder = path.FileName;
                     SaveFile(path.FileName);
                 }

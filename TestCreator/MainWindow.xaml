@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="123" MinWidth="600" WindowStyle="None" SizeChanged="Window_SizeChanged" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp">
+        Title="TestCreator" MinWidth="600" WindowStyle="None" SizeChanged="Window_SizeChanged" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" Icon="Pictures/logo.png">
     <WindowChrome.WindowChrome>
         <WindowChrome
         CaptionHeight="0"

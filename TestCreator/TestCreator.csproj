@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="IronPython, Version=2.7.9.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <HintPath>..\packages\IronPython.2.7.9\lib\net45\IronPython.dll</HintPath>
@@ -179,6 +182,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Pictures\fon.png" />
+    <Resource Include="Pictures\logo.png" />
+    <Resource Include="Pictures\logo.ico" />
+    <Resource Include="logo.ico" />
     <Content Include="Python\json_processing.py">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
