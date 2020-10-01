@@ -549,29 +549,31 @@ namespace TestCreator
 
         private void CharEqAddButtonClick(object sender, RoutedEventArgs e)
         {
+            string str = (sender as Button).Content.ToString().Trim();
             int car = E1TFormula.CaretIndex;
             if (E1TFormula.CaretIndex == 0)
-                E1TFormula.Text = E1TFormula.Text + (sender as Button).Content.ToString();
+                E1TFormula.Text = E1TFormula.Text + str;
             else
-                E1TFormula.Text = E1TFormula.Text.Insert(E1TFormula.CaretIndex, (sender as Button).Content.ToString());
+                E1TFormula.Text = E1TFormula.Text.Insert(E1TFormula.CaretIndex, str);
             E1TFormula.Focus();
             if ((sender as Button).Content.ToString().Last() == ')')
-                E1TFormula.CaretIndex = car + ((sender as Button).Content.ToString().Length - 1);
+                E1TFormula.CaretIndex = car + (str.Length - 1);
             else
-                E1TFormula.CaretIndex = car + (sender as Button).Content.ToString().Length;
+                E1TFormula.CaretIndex = car + str.Length;
         }
         private void CharTxtAddButtonClick(object sender, RoutedEventArgs e)
         {
+            string str = (sender as Button).Content.ToString().Trim();
             int car = E1TText.CaretIndex;
             if (E1TText.CaretIndex == 0)
-                E1TText.Text = E1TText.Text + (sender as Button).Content.ToString();
+                E1TText.Text = E1TText.Text + str;
             else
-                E1TText.Text = E1TText.Text.Insert(E1TText.CaretIndex, (sender as Button).Content.ToString());
+                E1TText.Text = E1TText.Text.Insert(E1TText.CaretIndex, str);
             E1TText.Focus();
             if ((sender as Button).Content.ToString().Last() == ')')
-                E1TText.CaretIndex = car + ((sender as Button).Content.ToString().Length - 1);
+                E1TText.CaretIndex = car + (str.Length - 1);
             else
-                E1TText.CaretIndex = car + (sender as Button).Content.ToString().Length;
+                E1TText.CaretIndex = car + str.Length;
         }
     }
 }

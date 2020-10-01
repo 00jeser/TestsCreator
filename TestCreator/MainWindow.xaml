@@ -73,25 +73,19 @@
             <Setter Property="BorderThickness" Value="1,0,0,0" />
             <Setter Property="BorderBrush" Value="Black" />
         </Style>
-        <Style TargetType="DataGridCell" x:Key="styleForDGCellLeft">
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="BorderBrush" Value="Black" />
-            <Style.Triggers>
-                    <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="Green"/>
-                        <Setter Property="Foreground" Value="Yellow"/>
-                        <Setter Property="BorderBrush" Value="Aqua"/>
-                    </Trigger>
-                    <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                        <Setter Property="BorderBrush" Value="Red" />
-                    </Trigger>
-                </Style.Triggers>
-        </Style>
         <Style TargetType="DataGridRow" x:Key="styleForDGRow">
             <Setter Property="BorderThickness" Value="0,0,0,1" />
             <Setter Property="BorderBrush" Value="Black" />
         </Style>
-        <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}" x:Key="DataGridStyle">
+        <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}" x:Key="DataGridStyleC">
+            <Setter Property="Background" Value="{DynamicResource Color1}" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="0.5 0.5 0.5 0.5"/>
+            <Setter Property="Width" Value="auto"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+        <Style BasedOn="{StaticResource {x:Type DataGridRowHeader}}" TargetType="{x:Type DataGridRowHeader}" x:Key="DataGridStyleR">
             <Setter Property="Background" Value="{DynamicResource Color1}" />
             <Setter Property="Foreground" Value="Black" />
             <Setter Property="BorderBrush" Value="Black"/>
@@ -621,19 +615,20 @@
                         <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Visible" Background="White" Grid.ColumnSpan="2" Margin="0,0,0,23">
                             <StackPanel>
                                 <TextBlock Text="Текст задачи" Margin="3" FontSize="{DynamicResource FontSize}"/>
-                                <StackPanel Orientation="Horizontal" Height="25" Margin="3" >
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharTxtAddButtonClick" Content="√"/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharTxtAddButtonClick" Content="cos()"/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharTxtAddButtonClick" Content="sin()"/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharTxtAddButtonClick" Content="tan()"/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharTxtAddButtonClick" Content="^"/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharTxtAddButtonClick" Content="π"/>
+                                <StackPanel Orientation="Horizontal" Margin="3" >
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content=" √ "/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content="cos()"/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content="sin()"/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content="tan()"/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content=" ^ "/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content=" π "/>
                                 </StackPanel>
-                                <TextBox x:Name="E1TText" Margin="3" Height="200" TextWrapping="Wrap" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" FontSize="{DynamicResource FontSize}" TextChanged="E1TText_TextChanged"/>
+                                <TextBox x:Name="E1TText" Margin="3" MinHeight="50" TextWrapping="Wrap" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" FontSize="{DynamicResource FontSize}" TextChanged="E1TText_TextChanged"/>
                                 <DataGrid
                                     RowStyle="{StaticResource ResourceKey=styleForDGRow}" 
                                     CellStyle="{StaticResource ResourceKey=styleForDGCell}"
-                                    ColumnHeaderStyle="{StaticResource ResourceKey=DataGridStyle}"
+                                    ColumnHeaderStyle="{StaticResource ResourceKey=DataGridStyleC}"
+                                    RowHeaderStyle="{StaticResource ResourceKey=DataGridStyleR}"
                                     x:Name="E1TVars" CanUserAddRows="False" Margin="3" AutoGenerateColumns="False"
                                     FontSize="{DynamicResource FontSize}">
                                     <DataGrid.Columns>
@@ -645,15 +640,18 @@
                                     </DataGrid.Resources>
                                 </DataGrid>
                                 <TextBlock Margin="3" HorizontalAlignment="Left" VerticalAlignment="Bottom" Text="Формула решения задачи" TextWrapping="Wrap"  FontSize="{DynamicResource FontSize}"/>
-                                <StackPanel Orientation="Horizontal" Height="25" Margin="3" >
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" Content="√"/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" Content="cos()"/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" Content="sin()"/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" Content="tan()"/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" Content="^"/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" Content="π"/>
+                                <StackPanel Orientation="Horizontal" Margin="3" >
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content=" √ "/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content="cos()"/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content="sin()"/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content="tan()"/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content=" ^ "/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content=" π "/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content="bin()"/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content="hex()"/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content="oct()"/>
                                 </StackPanel>
-                                <TextBox Margin="3" x:Name="E1TFormula" VerticalAlignment="Bottom" Height="300" TextWrapping="Wrap" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" FontSize="{DynamicResource FontSize}" Text="Ответ="/>
+                                <TextBox Margin="3" x:Name="E1TFormula" VerticalAlignment="Bottom" MinHeight="50" TextWrapping="Wrap" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" FontSize="{DynamicResource FontSize}" Text="Ответ="/>
                             </StackPanel>
                         </ScrollViewer>
                         <Button VerticalAlignment="Bottom" Style="{StaticResource OtherButton}" Click="E1TEnd"  Margin="3,0,3,3" Content="Сохранить"/>
@@ -674,7 +672,9 @@
                             ColumnWidth="*" HorizontalScrollBarVisibility="Disabled" 
                             Grid.ColumnSpan="2" x:Name="ESTTasks" CanUserAddRows="True" 
                             Margin="3,3,3,30" AutoGenerateColumns="False" FontSize="{DynamicResource FontSize}"
-                            ColumnHeaderStyle="{StaticResource ResourceKey=DataGridStyle}">
+                            ColumnHeaderStyle="{StaticResource ResourceKey=DataGridStyleC}"
+                            RowHeaderStyle="{StaticResource ResourceKey=DataGridStyleR}"
+                            >
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Текст задания" Binding="{Binding Path=Text}" ElementStyle="{StaticResource DataGridCellTextWrap}" Width="2*">
                                     <DataGridTextColumn.EditingElementStyle>
