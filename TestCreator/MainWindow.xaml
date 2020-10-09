@@ -212,7 +212,7 @@
                                             Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)"
                                             AutoReverse="False"
                                             To="#10000000"
-                                            Duration="0:0:0.2"/>
+                                            Duration="0:0:0.5"/>
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </EventTrigger>
@@ -223,7 +223,7 @@
                                             Storyboard.TargetName="Border"
                                             Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)"
                                             AutoReverse="False"
-                                            To="#FFAAAAAA"
+                                            To="#FF888888"
                                             Duration="0:0:0.2"/>
                                         </Storyboard>
                                     </BeginStoryboard>
@@ -236,7 +236,7 @@
                                             Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)"
                                             AutoReverse="False"
                                             To="#AAAAAAAA"
-                                            Duration="0:0:0.3"/>
+                                            Duration="0:0:0.7"/>
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </EventTrigger>
@@ -527,16 +527,24 @@
                     </TabItem.Header>
                     <Grid x:Name="g3" Background="White">
                         <WrapPanel>
-                            <Button Style="{DynamicResource MenuButton}" Click="Export">
+                            <Button Style="{DynamicResource MenuButton}" Click="ExportWord">
                                 <Grid>
                                     <Image Margin="0,0,0,13" Source="Pictures/Export.png"/>
                                     <TextBlock Text="Экспорт в word" VerticalAlignment="Bottom" Margin="0,0,0,-2"/>
                                 </Grid>
                             </Button>
+                            <Grid Width="10"/>
                             <Button Style="{DynamicResource MenuButton}" Click="ExportTxt">
                                 <Grid>
                                     <Image Margin="0,0,0,13" Source="Pictures/Export.png"/>
                                     <TextBlock Text="Экспорт в txt" VerticalAlignment="Bottom" Margin="0,0,0,-2"/>
+                                </Grid>
+                            </Button>
+                            <Grid Width="10"/>
+                            <Button Style="{DynamicResource MenuButton}" Click="ExportBuf">
+                                <Grid>
+                                    <Image Margin="0,0,0,13" Source="Pictures/Export.png"/>
+                                    <TextBlock Text="Скопировать варианты в буфер обмена" VerticalAlignment="Bottom" Margin="0,0,0,-2"/>
                                 </Grid>
                             </Button>
                             <Grid Width="20"/>
@@ -615,15 +623,15 @@
                         <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Visible" Background="White" Grid.ColumnSpan="2" Margin="0,0,0,23">
                             <StackPanel>
                                 <TextBlock Text="Текст задачи" Margin="3" FontSize="{DynamicResource FontSize}"/>
-                                <StackPanel Orientation="Horizontal" Margin="3" >
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content=" √ "/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content="cos()"/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content="sin()"/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content="tan()"/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content=" ^ "/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content=" π "/>
-                                </StackPanel>
                                 <TextBox x:Name="E1TText" Margin="3" MinHeight="50" TextWrapping="Wrap" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" FontSize="{DynamicResource FontSize}" TextChanged="E1TText_TextChanged"/>
+                                <StackPanel Orientation="Horizontal" Margin="3">
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharTxtAddButtonClick" FontSize="16" ToolTip="Корень" Content=" √ "/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharTxtAddButtonClick" FontSize="16" ToolTip="Косинус" Content="cos()"/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharTxtAddButtonClick" FontSize="16" ToolTip="Синус" Content="sin()"/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharTxtAddButtonClick" FontSize="16" ToolTip="Тангенс" Content="tan()"/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharTxtAddButtonClick" FontSize="16" ToolTip="Степень" Content=" ^ "/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharTxtAddButtonClick" FontSize="16" ToolTip="Пи" Content=" π "/>
+                                </StackPanel>
                                 <DataGrid
                                     RowStyle="{StaticResource ResourceKey=styleForDGRow}" 
                                     CellStyle="{StaticResource ResourceKey=styleForDGCell}"
@@ -640,18 +648,18 @@
                                     </DataGrid.Resources>
                                 </DataGrid>
                                 <TextBlock Margin="3" HorizontalAlignment="Left" VerticalAlignment="Bottom" Text="Формула решения задачи" TextWrapping="Wrap"  FontSize="{DynamicResource FontSize}"/>
-                                <StackPanel Orientation="Horizontal" Margin="3" >
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content=" √ "/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content="cos()"/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content="sin()"/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content="tan()"/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content=" ^ "/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content=" π "/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content="bin()"/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content="hex()"/>
-                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" Content="oct()"/>
-                                </StackPanel>
                                 <TextBox Margin="3" x:Name="E1TFormula" VerticalAlignment="Bottom" MinHeight="50" TextWrapping="Wrap" AcceptsReturn="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" FontSize="{DynamicResource FontSize}" Text="Ответ="/>
+                                <StackPanel Orientation="Horizontal" Margin="3" >
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" ToolTip="Корень" Content=" √ "/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" ToolTip="Косинус" Content="cos()"/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" ToolTip="Синус" Content="sin()"/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" ToolTip="Тангенс" Content="tan()"/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" ToolTip="Степень" Content=" ^ "/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" ToolTip="Пи" Content=" π "/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" ToolTip="Перевести в 2 сс" Content="bin()"/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" ToolTip="Перевести в 16 сс" Content="hex()"/>
+                                    <Button Margin="3,0" Style="{StaticResource OtherButton}" Click="CharEqAddButtonClick" FontSize="16" ToolTip="Перевести в 8 сс" Content="oct()"/>
+                                </StackPanel>
                             </StackPanel>
                         </ScrollViewer>
                         <Button VerticalAlignment="Bottom" Style="{StaticResource OtherButton}" Click="E1TEnd"  Margin="3,0,3,3" Content="Сохранить"/>

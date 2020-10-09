@@ -15,6 +15,8 @@ using System.Diagnostics;
 using Word = Microsoft.Office.Interop.Word;
 using System.Text.RegularExpressions;
 
+using System.Threading.Tasks;
+using System.Threading;
 namespace TestCreator
 {
     /// <summary>
@@ -119,6 +121,7 @@ namespace TestCreator
                 E1TText.Text = i.task;
                 E1TVars.ItemsSource = i.visualVars;
                 E1TFormula.Text = i.math;
+                E1TFormula.CaretIndex = i.math.Length;
             }
             else
             {
@@ -195,7 +198,7 @@ namespace TestCreator
             EditSomeGrid.Visibility = Visibility.Hidden;
         }
 
-        private void E1TText_TextChanged(object sender, TextChangedEventArgs e)
+        private async void FindVars() 
         {
             var vrs = new Dictionary<string, string>();
             var openFlag = false;
@@ -240,7 +243,10 @@ namespace TestCreator
                 }
             }
             E1TVars.ItemsSource = vars;
-
+        }
+        private async void E1TText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            FindVars();
         }
 
         private void tasksList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -417,62 +423,67 @@ namespace TestCreator
                 ControlPress = false;
         }
 
-        private void Export(object sender, RoutedEventArgs e)
+        private string Export() 
+        {
+            dynamic function = scope.GetVariable("main_func");
+            dynamic result = function(JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented), int.Parse(VarAmoInp.Text));
+            result = Regex.Unescape(result);
+
+            //result = File.ReadAllText("F:\\txt.txt");
+            List<List<rezultedTask>> rezultedTasks = JsonConvert.DeserializeObject<List<List<rezultedTask>>>(result);
+            result = "";
+
+            int xcCounter = 0;
+            //foreach (var variant in rezultedTasks)
+            for (int v = 1; v <= rezultedTasks.Count; v++)
+            {
+                xcCounter += 1;
+                result += $"Вариант {v}\n";
+                for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
+                {
+                    result += n + ". ";
+                    result += rezultedTasks[v - 1][n - 1].task;
+                    result += "\n";
+                }
+                if ((xcCounter == xcSelect.SelectedIndex + 1) || (v == rezultedTasks.Count))
+                {
+                    xcCounter = 0;
+                    result += "\xc";
+                }
+                else
+                {
+                    result += "\n";
+                }
+            }
+            result += "Ответы\n";
+            for (int v = 1; v <= rezultedTasks.Count; v++)
+            {
+                result += $"Вариант {v}\n";
+                for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
+                {
+                    if (!string.IsNullOrEmpty(rezultedTasks[v - 1][n - 1].answer))
+                    {
+                        result += n + ". ";
+                        result += rezultedTasks[v - 1][n - 1].answer;
+                        result += "\n";
+                    }
+                }
+            }
+            return result;
+        }
+
+        private void ExportWord(object sender, RoutedEventArgs e)
         {
             try
             {
-                dynamic function = scope.GetVariable("main_func");
-                dynamic result = function(JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented), int.Parse(VarAmoInp.Text));
-                result = Regex.Unescape(result);
-
-                //result = File.ReadAllText("F:\\txt.txt");
-                List<List<rezultedTask>> rezultedTasks = JsonConvert.DeserializeObject<List<List<rezultedTask>>>(result);
-                result = "";
-
-                int xcCounter = 0;
-                //foreach (var variant in rezultedTasks)
-                for (int v = 1; v <= rezultedTasks.Count; v++)
-                {
-                    xcCounter += 1;
-                    result += $"Вариант {v}\n";
-                    for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
-                    {
-                        result += n + ". ";
-                        result += rezultedTasks[v - 1][n - 1].task;
-                        result += "\n";
-                    }
-                    if ((xcCounter == xcSelect.SelectedIndex + 1) || (v == rezultedTasks.Count))
-                    {
-                        xcCounter = 0;
-                        result += "\xc";
-                    }
-                    else
-                    {
-                        result += "\n";
-                    }
-                }
-                result += "Ответы\n";
-                for (int v = 1; v <= rezultedTasks.Count; v++)
-                {
-                    result += $"Вариант {v}\n";
-                    for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
-                    {
-                        if (!string.IsNullOrEmpty(rezultedTasks[v - 1][n - 1].answer))
-                        {
-                            result += n + ". ";
-                            result += rezultedTasks[v - 1][n - 1].answer;
-                            result += "\n";
-                        }
-                    }
-                }
+                var result = Export();
 
                 var app = new Word.Application();
                 var doc = app.Documents.Add();
                 var r = doc.Range();
                 r.Text = result;
                 app.Visible = true;
-                app.GoForward();
-                app.PutFocusInMailHeader();
+                app.ActiveWindow.SetFocus();
                 //minimize(null, null);
 
             }
@@ -486,50 +497,8 @@ namespace TestCreator
         {
             try
             {
-                dynamic function = scope.GetVariable("main_func");
-                dynamic result = function(JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented), int.Parse(VarAmoInp.Text));
-                result = System.Text.RegularExpressions.Regex.Unescape(result);
+                var result = Export();
 
-                //result = File.ReadAllText("F:\\txt.txt");
-                List<List<rezultedTask>> rezultedTasks = JsonConvert.DeserializeObject<List<List<rezultedTask>>>(result);
-                result = "";
-
-                int xcCounter = 0;
-                //foreach (var variant in rezultedTasks)
-                for (int v = 1; v <= rezultedTasks.Count; v++)
-                {
-                    xcCounter += 1;
-                    result += $"Вариант {v}\n";
-                    for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
-                    {
-                        result += n + ". ";
-                        result += rezultedTasks[v - 1][n - 1].task;
-                        result += "\n";
-                    }
-                    if ((xcCounter == xcSelect.SelectedIndex + 1) || (v == rezultedTasks.Count))
-                    {
-                        xcCounter = 0;
-                        result += "\xc";
-                    }
-                    else
-                    {
-                        result += "\n";
-                    }
-                }
-                result += "Ответы\n";
-                for (int v = 1; v <= rezultedTasks.Count; v++)
-                {
-                    result += $"Вариант {v}\n";
-                    for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
-                    {
-                        if (!string.IsNullOrEmpty(rezultedTasks[v - 1][n - 1].answer))
-                        {
-                            result += n + ". ";
-                            result += rezultedTasks[v - 1][n - 1].answer;
-                            result += "\n";
-                        }
-                    }
-                }
 
                 var path = System.Environment.GetEnvironmentVariable("TEMP") + "\\\\" + DateTime.Now.ToString().Replace(':', '.') + ".txt";
                 using (StreamWriter sw = new StreamWriter(path, false, Encoding.UTF8))
@@ -542,6 +511,21 @@ namespace TestCreator
                 process.Start();
             }
             catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void ExportBuf(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var result = Export();
+
+
+                Clipboard.SetText(result);
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -575,5 +559,6 @@ namespace TestCreator
             else
                 E1TText.CaretIndex = car + str.Length;
         }
+
     }
 }
