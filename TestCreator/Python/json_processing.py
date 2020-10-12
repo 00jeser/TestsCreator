@@ -1,7 +1,7 @@
 import json
 from random import randint
 from random import choice
-from math import sqrt
+from math import sqrt, sin, cos, tan, pi, acos, asin, atan
 
 
 def proc_func(inp):  # Function for selecting random problems and numbers under certain conditions
@@ -30,7 +30,13 @@ def decision(inp):  # Problem solution
             inp['equation'] = inp['equation'].replace(':', '/')
             inp['equation'] = inp['equation'].replace('^', '**')
             inp['equation'] = inp['equation'].replace('√', 'sqrt')
-            return eval(inp['equation'].split('=')[1])
+            inp['equation'] = inp['equation'].replace('arccos', 'acos')
+            inp['equation'] = inp['equation'].replace('arcsin', 'asin')
+            inp['equation'] = inp['equation'].replace('arctan', 'atan')
+            inp['equation'] = inp['equation'].split(';')
+            for i in range(len(inp['equation'])):
+                inp['equation'][i] = eval(inp['equation'][i].split('=')[1])
+            return *inp['equation']
     if inp['equation'] and 'vector{' in inp['equation']:
         inp['equation'] = inp['equation'].split('=')[1]
         inp['equation'] = inp['equation'].replace('vector{', '')
