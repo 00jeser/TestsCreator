@@ -5,26 +5,18 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Newtonsoft.Json;
-using System.Collections.ObjectModel;
 using TestCreator.Properties;
 using System.Diagnostics;
 using Word = Microsoft.Office.Interop.Word;
-using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Globalization;
-using Microsoft.Scripting.Runtime;
 
+using System.Threading.Tasks;
+using System.Threading;
 namespace TestCreator
 {
     /// <summary>
@@ -53,7 +45,7 @@ namespace TestCreator
                 g2.Margin = new Thickness(-2);
                 g3.Margin = new Thickness(-2);
             }
-            ProjName.Text = s.ToString();
+            //ProjName.Text = s.ToString();
 
             tasksList.ItemsSource = Singlton.tasks;
             Singlton.StyleChanged += Singlton_StyleChanged;
@@ -108,7 +100,7 @@ namespace TestCreator
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-           
+
         }
 
         private void focusList(object sender, RoutedEventArgs e)
@@ -129,6 +121,7 @@ namespace TestCreator
                 E1TText.Text = i.task;
                 E1TVars.ItemsSource = i.visualVars;
                 E1TFormula.Text = i.math;
+                E1TFormula.CaretIndex = i.math.Length;
             }
             else
             {
@@ -205,7 +198,7 @@ namespace TestCreator
             EditSomeGrid.Visibility = Visibility.Hidden;
         }
 
-        private void E1TText_TextChanged(object sender, TextChangedEventArgs e)
+        private async void FindVars() 
         {
             var vrs = new Dictionary<string, string>();
             var openFlag = false;
@@ -250,7 +243,10 @@ namespace TestCreator
                 }
             }
             E1TVars.ItemsSource = vars;
-
+        }
+        private async void E1TText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            FindVars();
         }
 
         private void tasksList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -262,7 +258,7 @@ namespace TestCreator
         private void NewWithVars(object sender, RoutedEventArgs e)
         {
             LostSave();
-            Singlton.tasks.Add(new Task() { type = true });
+            Singlton.tasks.Add(new Task() { type = true, math = "Ответ=" });
             tasksList.ItemsSource = "";
             tasksList.ItemsSource = Singlton.tasks;
         }
@@ -282,7 +278,12 @@ namespace TestCreator
                 try
                 {
                     var path = new Microsoft.Win32.SaveFileDialog();
+                    path.Filter = ".test||.test";
                     path.ShowDialog();
+                    if (string.IsNullOrEmpty(path.FileName)) 
+                    {
+                        return;
+                    }
                     SaveFolder = path.FileName;
                     SaveFile(path.FileName);
                 }
@@ -343,7 +344,7 @@ namespace TestCreator
         {
             if (this.WindowState == WindowState.Maximized)
                 this.WindowState = WindowState.Normal;
-            else 
+            else
             {
                 this.WindowStyle = WindowStyle.SingleBorderWindow;
                 this.WindowState = WindowState.Maximized;
@@ -396,7 +397,12 @@ namespace TestCreator
                 else
                 {
                     var path = new Microsoft.Win32.SaveFileDialog();
+                    path.Filter = "txt files (*.test)|*.test";
                     path.ShowDialog();
+                    if (string.IsNullOrEmpty(path.FileName))
+                    {
+                        return;
+                    }
                     SaveFolder = path.FileName;
                     SaveFile(path.FileName);
                 }
@@ -417,59 +423,67 @@ namespace TestCreator
                 ControlPress = false;
         }
 
-        private void Export(object sender, RoutedEventArgs e)
+        private string Export() 
         {
-            try
+            dynamic function = scope.GetVariable("main_func");
+            dynamic result = function(JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented), int.Parse(VarAmoInp.Text));
+            result = Regex.Unescape(result);
+
+            //result = File.ReadAllText("F:\\txt.txt");
+            List<List<rezultedTask>> rezultedTasks = JsonConvert.DeserializeObject<List<List<rezultedTask>>>(result);
+            result = "";
+
+            int xcCounter = 0;
+            //foreach (var variant in rezultedTasks)
+            for (int v = 1; v <= rezultedTasks.Count; v++)
             {
-                dynamic function = scope.GetVariable("main_func");
-                dynamic result = function(JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented), int.Parse(VarAmoInp.Text));
-                result = System.Text.RegularExpressions.Regex.Unescape(result);
-
-                //result = File.ReadAllText("F:\\txt.txt");
-                List<List<rezultedTask>> rezultedTasks = JsonConvert.DeserializeObject<List<List<rezultedTask>>>(result);
-                result = "";
-
-                int xcCounter = 0;
-                //foreach (var variant in rezultedTasks)
-                for (int v = 1; v <= rezultedTasks.Count; v++)
+                xcCounter += 1;
+                result += $"Вариант {v}\n";
+                for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
                 {
-                    xcCounter += 1;
-                    result += $"Вариант {v}\n";
-                    for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
-                    {
-                        result += n + ". ";
-                        result += rezultedTasks[v - 1][n - 1].task;
-                        result += "\n";
-                    }
-                    if ((xcCounter == xcSelect.SelectedIndex + 1) || (v == rezultedTasks.Count))
-                    {
-                        xcCounter = 0;
-                        result += "\xc";
-                    }
-                    else
-                    {
-                        result += "\n";
-                    }
+                    result += n + ". ";
+                    result += rezultedTasks[v - 1][n - 1].task;
+                    result += "\n";
                 }
-                result += "Ответы\n";
-                for (int v = 1; v <= rezultedTasks.Count; v++)
+                if ((xcCounter == xcSelect.SelectedIndex + 1) || (v == rezultedTasks.Count))
                 {
-                    result += $"Вариант {v}\n";
-                    for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
+                    xcCounter = 0;
+                    result += "\xc";
+                }
+                else
+                {
+                    result += "\n";
+                }
+            }
+            result += "Ответы\n";
+            for (int v = 1; v <= rezultedTasks.Count; v++)
+            {
+                result += $"Вариант {v}\n";
+                for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
+                {
+                    if (!string.IsNullOrEmpty(rezultedTasks[v - 1][n - 1].answer))
                     {
                         result += n + ". ";
                         result += rezultedTasks[v - 1][n - 1].answer;
                         result += "\n";
                     }
                 }
+            }
+            return result;
+        }
+
+        private void ExportWord(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var result = Export();
 
                 var app = new Word.Application();
                 var doc = app.Documents.Add();
                 var r = doc.Range();
                 r.Text = result;
                 app.Visible = true;
-                app.GoForward();
-                app.PutFocusInMailHeader();
+                app.ActiveWindow.SetFocus();
                 //minimize(null, null);
 
             }
@@ -481,47 +495,10 @@ namespace TestCreator
 
         private async void ExportTxt(object sender, RoutedEventArgs e)
         {
-                dynamic function = scope.GetVariable("main_func");
-                dynamic result = function(JsonConvert.SerializeObject(Singlton.tasks, Formatting.Indented), int.Parse(VarAmoInp.Text));
-                result = System.Text.RegularExpressions.Regex.Unescape(result);
+            try
+            {
+                var result = Export();
 
-                //result = File.ReadAllText("F:\\txt.txt");
-                List<List<rezultedTask>> rezultedTasks = JsonConvert.DeserializeObject<List<List<rezultedTask>>>(result);
-                result = "";
-
-                int xcCounter = 0;
-                //foreach (var variant in rezultedTasks)
-                for (int v = 1; v <= rezultedTasks.Count; v++)
-                {
-                    xcCounter += 1;
-                    result += $"Вариант {v}\n";
-                    for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
-                    {
-                        result += n + ". ";
-                        result += rezultedTasks[v - 1][n - 1].task;
-                        result += "\n";
-                    }
-                    if ((xcCounter == xcSelect.SelectedIndex + 1) || (v == rezultedTasks.Count))
-                    {
-                        xcCounter = 0;
-                        result += "\xc";
-                    }
-                    else
-                    {
-                        result += "\n";
-                    }
-                }
-                result += "Ответы\n";
-                for (int v = 1; v <= rezultedTasks.Count; v++)
-                {
-                    result += $"Вариант {v}\n";
-                    for (int n = 1; n <= rezultedTasks[v - 1].Count; n++)
-                    {
-                        result += n + ". ";
-                        result += rezultedTasks[v - 1][n - 1].answer;
-                        result += "\n";
-                    }
-                }
 
                 var path = System.Environment.GetEnvironmentVariable("TEMP") + "\\\\" + DateTime.Now.ToString().Replace(':', '.') + ".txt";
                 using (StreamWriter sw = new StreamWriter(path, false, Encoding.UTF8))
@@ -532,7 +509,56 @@ namespace TestCreator
                 process.StartInfo.FileName = "notepad.exe";
                 process.StartInfo.Arguments = '\"' + path + '\"';
                 process.Start();
-
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
+
+        private void ExportBuf(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var result = Export();
+
+
+                Clipboard.SetText(result);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void CharEqAddButtonClick(object sender, RoutedEventArgs e)
+        {
+            string str = (sender as Button).Content.ToString().Trim();
+            int car = E1TFormula.CaretIndex;
+            if (E1TFormula.CaretIndex == 0)
+                E1TFormula.Text = E1TFormula.Text + str;
+            else
+                E1TFormula.Text = E1TFormula.Text.Insert(E1TFormula.CaretIndex, str);
+            E1TFormula.Focus();
+            if ((sender as Button).Content.ToString().Last() == ')')
+                E1TFormula.CaretIndex = car + (str.Length - 1);
+            else
+                E1TFormula.CaretIndex = car + str.Length;
+        }
+        private void CharTxtAddButtonClick(object sender, RoutedEventArgs e)
+        {
+            string str = (sender as Button).Content.ToString().Trim();
+            int car = E1TText.CaretIndex;
+            if (E1TText.CaretIndex == 0)
+                E1TText.Text = E1TText.Text + str;
+            else
+                E1TText.Text = E1TText.Text.Insert(E1TText.CaretIndex, str);
+            E1TText.Focus();
+            if ((sender as Button).Content.ToString().Last() == ')')
+                E1TText.CaretIndex = car + (str.Length - 1);
+            else
+                E1TText.CaretIndex = car + str.Length;
+        }
+
     }
 }
